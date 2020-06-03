@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eu
+git --no-pager diff --check --diff-filter=ACM HEAD -- '*.php' '*.js' '*.twig' '*.yml' '*.xlf' '*.sass' '*.json' '*.jsx'
+if [ $(git --no-pager diff --name-only --diff-filter=ACM HEAD -- | grep '.js$' | xargs -n1 | wc -w) -ne 0 ]
+  then
+    FILES=$(git --no-pager diff --name-only --diff-filter=ACM HEAD -- | grep '.js$')
+    ./node_modules/eslint/bin/eslint.js $FILES
+fi

@@ -1,0 +1,55 @@
+.floating-card {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  background-color: #fbf9f9de;
+  max-width: 500px; 
+  padding: '10px';
+  border: '1px solid #eeececde';
+  z-index: 100;
+  box-shadow: 3px 4px 4px -4px rgba(0,0,0,0.75);
+}
+
+.floating-card__steps {
+  margin-bottom: 5;
+  text-align: 'center';
+}
+
+.floating-card__counter {
+  font-size: 22;
+  margin-bottom: 10px;
+  text-align: 'center'; 
+  font-weight: 'bold';
+}
+
+.floating-card__close {
+  right: 10px;
+  top: 5px;
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 300;
+  color: #646777;
+  text-shadow: none;
+  opacity: 0.2;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: 0.5;
+    color: #646777;
+  }
+}
+
+.floating-card__close {
+  position: absolute;
+  cursor: pointer;
+  outline: none;
+  font-weight: 700;
+  line-height: 1;
+  opacity: .2;
+  text-decoration: none;
+  z-index: 1;
+}
+
+.floating-card__close-x:after {
+  content: '×';
+}

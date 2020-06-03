@@ -1,0 +1,46 @@
+@import 'settings/variable';  //themes' colors
+
+@import './vendor';
+
+//base...
+@import 'generic/normalize.scss';
+@import 'generic/box-sizing.scss';
+@import './base/scaffolding';         // styles of base elements
+@import './base/typography';          // base styles of h1-h6, p, span
+
+//components...
+@import 'component/btn';
+@import './component/card';
+@import './component/check-box';
+@import './component/sidebar';
+@import './component/topbar';
+@import './component/load';
+@import './component/form';
+@import './component/wizard'; 
+@import './component/date-picker'; 
+@import './component/calendar';
+@import './component/progress-bar';
+@import './component/select-options';
+@import './component/dropzone';
+@import './component/dropdown';
+@import './component/notification';
+@import './component/floating-card';
+@import './component/modal';
+@import './component/react-select';
+@import './component/edit-table';
+@import './component/pagination';
+@import './component/tabs';
+@import './component/radio-btn'; 
+@import './component/breadcrumbs';
+@import './component/badge';
+@import './component/panel';
+@import './component/icons';
+
+//pages...
+@import 'containers/account';
+@import 'containers/dashboard';
+@import 'containers/not-found';
+
+//objects...
+@import 'objects/layout.scss';
+

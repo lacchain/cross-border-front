@@ -1,0 +1,38 @@
+.badge {
+  color: #ffffff;
+  padding: 6px 20px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 400;
+
+  &.badge-success, &.badge-ready, &.badge-active {
+    background-color: $color-accent;
+  }
+  &.badge-completed {
+    background-color: $color-blue;
+  }
+
+  &.badge-error, &.badge-blocking, &.badge-blocked {
+    background-color: $color-red;
+  }
+
+  &.badge-draft, &.badge-creating, &.badge-maturing, &.badge-inprogress {
+    background-color: #dddddd;
+  }
+
+  &.badge-issuing, &.badge-created, &.badge-notissued, &.badge-requested {
+    background-color: $color-yellow;
+  }
+
+  &.badge-issued {
+    background-color: $color-orange;
+  }
+
+  &.badge-distributing, &.badge-distributed,  &.badge-assigned {
+    background-color: $color-blue;
+  }
+
+  &.badge-activating, &.badge-active, &.badge-reactivating {
+    background-color: $color-accent;
+  }
+}
