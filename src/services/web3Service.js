@@ -29,7 +29,8 @@ export const web3Service = {
     whitelistAccount,
     mintMoney,
     isMetamaskLogged,
-    orderTransfer
+    orderTransfer,
+    approveTransfer
 };
 
 function isMetamaskInstalled() {
@@ -80,7 +81,7 @@ async function whitelistAccount(accountAddress, currency) {
     }
     try {
         emoneyContract.methods
-            .addWhitelisted(accountAddress) //function in contract
+            .addWhitelisted(accountAddress.toLowerCase()) //function in contract
             .send({
                 from: window.web3.currentProvider.selectedAddress,
                 to: eDollarAddress,
@@ -117,7 +118,7 @@ async function mintMoney(accountAddress, amount, currency) {
     web3 = new Web3(window.web3.currentProvider);
     try {
         emoneyContract.methods
-            .mint(accountAddress, amount) //function in contract
+            .mint(accountAddress.toLowerCase(), amount) //function in contract
             .send({
                 from: window.web3.currentProvider.selectedAddress,
                 to: address,
@@ -141,12 +142,12 @@ async function mintMoney(accountAddress, amount, currency) {
     }
 }
 
-async function orderTransfer(to, operator, amount) {
+async function orderTransfer(to, operator, amount, rate) {
     const crossBorderContract = getContract(abiCrossBorderPayment, crossborderAddress);
     web3 = new Web3(window.web3.currentProvider);
     try {
-        return crossBorderContract.methods
-            .orderTransfer(uuidv4(), to, operator, amount) //function in contract
+        crossBorderContract.methods
+            .orderTransfer(uuidv4(), to, operator.toLowerCase(), amount, rate) //function in contract
             .send({
                 from: window.web3.currentProvider.selectedAddress,
                 to: crossborderAddress,
@@ -170,6 +171,36 @@ async function orderTransfer(to, operator, amount) {
     }
 }
 
+async function approveTransfer(operationId) {
+    const crossBorderContract = getContract(abiCrossBorderPayment, crossborderAddress);
+    
+    web3 = new Web3(window.web3.currentProvider);
+    try {
+        crossBorderContract.methods
+            .approveTransfer(operationId) //function in contract
+            .send({
+                from: window.web3.currentProvider.selectedAddress,
+                to: crossborderAddress,
+                gasPrice: 0
+            }).once('confirmation', function () {
+                store.dispatch(notificationActions.setSuccessNotification(
+                    'Cross border transfer approved!',
+                    'Congratulations, the transfer has been successfully approved!'
+                  ));
+                  return
+            })
+            .once('error', function (e) {
+                console.log(e);
+                store.dispatch(notificationActions.setErrorNotification(
+                  'Can\'t approve the transfer',
+                  'An error ocurred while approving the transfer in the DLT, please try again'
+                ));
+              })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 async function emoneyBalanceOf(who, currency) {
     let emoneyContract
     if (currency === 'USD') {
@@ -178,9 +209,9 @@ async function emoneyBalanceOf(who, currency) {
         emoneyContract = getContract(abiEmoneyTokenPeso, ePesosAddress);
     }
     
-    const balance = await emoneyContract.methods.balanceOf(who).call();
+    const balance = await emoneyContract.methods.balanceOf(who.toLowerCase()).call();
 
-    return parseFloat(balance.toString()) / Math.pow(10, 2);
+    return parseFloat(balance.toString()) / Math.pow(10, 4);
 }
 
 function asciiToHex(string) {

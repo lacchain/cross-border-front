@@ -11,6 +11,7 @@ export default class WizardForm extends PureComponent {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     history: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired
   };
 
   constructor() {
@@ -37,7 +38,7 @@ export default class WizardForm extends PureComponent {
     this.setState({ page: 2 });
   };
   render() {
-    const { onSubmit, submitError } = this.props;
+    const { onSubmit, submitError, loading } = this.props;
     const { page } = this.state;
     var progressStyle = {
       marginLeft: 'auto',
@@ -54,7 +55,7 @@ export default class WizardForm extends PureComponent {
               {page !== 0 &&<div className="wizard__steps">
                 <div className={ `wizard__step${page === 1 ? ' wizard__step--active' : ''}` }><p>1. AMOUNT</p></div>
                 <div className={ `wizard__step${page === 2 ? ' wizard__step--active' : ''}` }><p>2. RECIPIENT</p></div>
-                <div className={ `wizard__step${page === 3 ? ' wizard__step--active' : ''}` }><p>5. REVIEW</p></div>
+                <div className={ `wizard__step${page === 3 ? ' wizard__step--active' : ''}` }><p>3. REVIEW</p></div>
               </div>}
               <div className="progress-wrap progress-wrap--middle" style={ progressStyle }>
                 {page === 1 && <Progress value={ 33 } />}
@@ -78,6 +79,7 @@ export default class WizardForm extends PureComponent {
                     previousPage={ this.previousPage }
                     onSubmit={ onSubmit }
                     submitError={ submitError }
+                    loading={ loading }
                     />
                   )}
               </div>

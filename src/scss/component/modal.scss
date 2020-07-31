@@ -51,7 +51,9 @@
     margin-top: 0;
   }
 }
-
+.footer_right {
+justify-content: flex-end !important;
+}
 .modal__footer {
   margin-top: 20px;
   display: flex;
@@ -141,6 +143,10 @@
   &.modal-dialog--danger .modal-content {
     background-color: $color-red;
   }
+}
+
+.big-modal{
+  max-width: 680px !important
 }
 
 .modal-dialog--header {

@@ -37,7 +37,9 @@ class AccountActions extends PureComponent {
     let status = this.props.account.accountDetails.status
     status = status.toLowerCase()
     let balance
-    balance = await web3Service.emoneyBalanceOf(this.props.account.accountDetails.dltAddress, this.props.account.accountDetails.currency);
+    if (status !== 'requested') {
+      balance = await web3Service.emoneyBalanceOf(this.props.account.accountDetails.dltAddress, this.props.account.accountDetails.currency);
+    } 
     if (!balance) {
       balance = this.props.account.accountDetails.balance
     }
@@ -57,7 +59,7 @@ class AccountActions extends PureComponent {
   }
   mintMoney = async () => {
     this.setState({ load: true, mintModal: false })
-    await web3Service.mintMoney(this.props.account.accountDetails.dltAddress, this.props.mint.values.amountToMint * 100, this.props.account.accountDetails.currency)
+    await web3Service.mintMoney(this.props.account.accountDetails.dltAddress, this.props.mint.values.amountToMint * 10000, this.props.account.accountDetails.currency)
     let balance = await web3Service.emoneyBalanceOf(this.props.account.accountDetails.dltAddress, this.props.account.accountDetails.currency);
     this.setState({ balance: balance })
   }
@@ -142,7 +144,7 @@ class AccountActions extends PureComponent {
                   }}
                   options={[
                     { value: 'USD', label: 'USD - Dollar' },
-                    { value: 'MXN', label: 'MXN - Mexican Peso' },
+                    { value: 'DOP', label: 'DOP - Dominican Peso' },
                   ]}
                   placeholder="Select currency"
                 />
@@ -214,7 +216,7 @@ class AccountActions extends PureComponent {
               <div className={`badge badge-${this.state.status}`}>{this.state.status}</div>
             </div>
             <div style={inlineStyle2}>
-              <p className="bold-text" style={{ fontSize: '46px' }}>{this.state.balance}</p>
+              <p className="bold-text" style={{ fontSize: '46px' }}>{inputHelper.formatNumber(this.state.balance)}</p>
               <p className="bold-text" style={{ fontSize: '26px', marginTop: '15px' }}>{this.props.account.accountDetails.currency}</p>
             </div>
             {userService.isCiti() ?
@@ -226,7 +228,7 @@ class AccountActions extends PureComponent {
                     <p style={{ display: 'block' }}><LoadingIcon />TOKENIZE MONEY</p>
                   </Button>}
               </div> :
-              <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} color="primary" size="sm" onClick={() => this.props.history.push('/pages/new-transfer')}>
+              <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} color="primary" size="sm" onClick={() => this.props.history.push('/pages/new-transfer')} disabled={this.state.status === 'requested'}>
                 <p style={{ display: 'block' }}>SEND MONEY <SendIcon style={{ marginTop: '0px', marginLeft: '10px' }} /></p>
               </Button>}
           </div>

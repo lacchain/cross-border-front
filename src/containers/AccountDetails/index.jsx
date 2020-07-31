@@ -18,19 +18,23 @@ class AccountDetails extends PureComponent {
     this.state = {
       account: {},
       modal: false,
-      movements: null
+      movements: null,
+      timer: null
     };
   }
-
+  
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+    this.setState({ timer: null});
+  }
   componentDidMount = async () => {
+    this.getMovements()
+    
     let account;
-    let movements;
     let responseAccount;
-    let responseMovements;
 
     const { match: { params: { accountId } } } = this.props;
     const { history } = this.props;
-
     try {
       if (userService.isCiti()) {
         responseAccount = await restService.get(`/api/user/${accountId}`);
@@ -46,12 +50,21 @@ class AccountDetails extends PureComponent {
         history.push('/404');
       } else {
         account = responseAccount.data;
+        this.setState({ account });
       }
 
     } catch (e) {
       this.setState({ account: {} });
     }
 
+    let timer = setInterval(()=> this.getMovements(), process.env.POLLING_TIMER);
+    this.setState({ timer })
+  };
+  getMovements = async () => {
+    const { match: { params: { accountId } } } = this.props;
+
+    let responseMovements;
+    let movements;
     try {
       if (userService.isCiti()) {
         responseMovements = await restService.get(`/api/account/${accountId}/movements`);
@@ -60,13 +73,12 @@ class AccountDetails extends PureComponent {
       }
       
       movements = responseMovements.data;
-      this.setState({ account, movements });
+      this.setState({ movements });
 
     } catch (e) {
       this.setState({ movements: {} });
     }
-  };
-
+  }
   render() {
     if (!this.state.account.accountDetails) {
       return (<div></div>);

@@ -41,7 +41,6 @@ function getToken(username, password, dltAddress) {
     data
   }).then(function(response) {
     if (response.data) {
-      console.log('login', response.data)
       localStorage.setItem('access_token', JSON.stringify(response.data.access_token));
       localStorage.setItem('role', JSON.stringify(response.data.authorities[0].authority));
       localStorage.setItem('user', JSON.stringify(username));
@@ -59,7 +58,7 @@ function signUp(body) {
             dltAddress: body.dltAddress
         },
         bankDetails: {
-            bankName: 'bankito',
+            bankName: body.bankName.value,
             bankTaxId: body.bankTaxId,
             bankCity: body.bankCity,
             bankAccount: body.bankAccount

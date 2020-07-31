@@ -47,7 +47,22 @@ const post = (url, body) => {
 });
 };
 
+const proxyPost = (url, body) => {
+
+  let config = {
+    headers: {'Content-Type': 'text/xml'}
+  };
+
+  return axios.post(`${process.env.PROXY_API}${url}`, body)
+  .catch((error) => {
+    if (!error.response) {
+      return;
+    }
+});
+};
+
 export default {
   get,
-  post
+  post,
+  proxyPost
 };

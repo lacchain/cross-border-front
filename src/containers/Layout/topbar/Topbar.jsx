@@ -21,9 +21,10 @@ class Topbar extends PureComponent {
               changeMobileSidebarVisibility={ changeMobileSidebarVisibility }
               changeSidebarVisibility={ changeSidebarVisibility }
             />
-            <Link className="topbar__logo" to="/dashboard_default" />
-            <Link className="topbar__logo2" to="/dashboard_default" />
-            <Link className="topbar__logo3" to="/dashboard_default" />
+            <Link className="topbar__logo" to="/pages/idb" />
+            <Link className="topbar__logo2" to="/pages/lacchain" />
+            <Link className="topbar__logo3" to="/pages/idblab" />
+            <Link className="topbar__logo4" to="/pages/citi" />
           </div>
           <div className="topbar__right">
             <TopbarProfile />

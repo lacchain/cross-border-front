@@ -8,7 +8,9 @@ import { asyncForEach } from '../../../services/asyncForEach';
 
 const initialPage = 1;
 const itemsToShow = 10;
-
+const initialSort = (a, b) => {
+  return (a['datetime'] < b['datetime']) ? 1 : -1;
+};
 class AccountMovements extends PureComponent {
   constructor() {
     super();
@@ -28,9 +30,19 @@ class AccountMovements extends PureComponent {
   componentDidMount = async () => {
     let movements = this.props.movements
     this.setState({ movements });
-    if (movements.length > 0) {
+    if (movements && movements.length > 0) {
       this.buildRows(movements);
     }
+  };
+
+  componentDidUpdate = async (prevProps) => {
+    if (prevProps != this.props) {
+      let movements = this.props.movements
+      this.setState({ movements });
+      if (movements && movements.length > 0) {
+        this.buildRows(movements);
+      }
+  }
   };
 
   buildRows = async (movements) => {
@@ -40,6 +52,7 @@ class AccountMovements extends PureComponent {
     await asyncForEach(rowsToShow, async row => {
       row.currency = this.props.account.accountDetails.currency
     });
+    rowsToShow = rowsToShow.sort(initialSort).slice(0, 10);
     this.setState({
       rowsToShow,
       originalRows: rows,

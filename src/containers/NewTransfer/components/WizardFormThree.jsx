@@ -3,8 +3,10 @@ import { Alert, Button, ButtonToolbar } from 'reactstrap';
 import { reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
+import LoadingIcon from 'mdi-react/LoadingIcon';
 
-const WizardFormThree = ({ handleSubmit, previousPage, wizard, submitError, changeTransferData, changeRecipientData }) => {
+const WizardFormThree = ({ handleSubmit, previousPage, wizard, submitError, changeTransferData, changeRecipientData, loading }) => {
   let transfer = wizard.values;
   const inlineStyle = {
     display: 'inline-flex',
@@ -33,7 +35,11 @@ const WizardFormThree = ({ handleSubmit, previousPage, wizard, submitError, chan
     marginTop: 20,
     textAlign: 'center'
   };
-
+  const expandClass = classNames({
+    icon: true,
+    expand: true,
+    'expand--load': loading,
+  });
   return (
     <form className="form form--horizontal wizard__form" onSubmit={handleSubmit}>
       <h3 className="wizard__title">3. Review and confirm</h3>
@@ -51,12 +57,12 @@ The rate applied is indicative, final rate is applied at the moment of the trans
           </div>
           <div style={inlineStyle}>
             <p className="review-wizard-text">Fee aplied:</p>
-            <p className="bold-text-gray" style={{ marginTop: '0px' }}>{transfer.fee  + ' ' + transfer.currencyAccount}</p>
+            <p className="bold-text-gray" style={{ marginTop: '0px' }}>N/A</p>
           </div>
-          <div style={inlineStyle}>
+          {/* <div style={inlineStyle}>
             <p className="review-wizard-text">Amount converted:</p>
             <p className="bold-text-gray" style={{ marginTop: '0px' }}>{transfer.amount - transfer.fee  + ' ' + transfer.currencyAccount}</p>
-          </div>
+          </div> */}
           <div style={inlineStyle}>
             <p className="review-wizard-text">Rate applied:</p>
             <p className="bold-text-gray" style={{ marginTop: '0px' }}>{transfer.rate}</p>
@@ -95,7 +101,8 @@ The rate applied is indicative, final rate is applied at the moment of the trans
         </Alert>
         <ButtonToolbar className="form__button-toolbar wizard__toolbar" style={{display: 'block', textAlign: 'center', marginTop: '20px'}}>
           <Button type="button" className="previous" onClick={previousPage}>Back</Button>
-          <Button color="primary" type="submit">Confirm</Button>
+          <Button type="submit" color={'primary'} className={expandClass}>
+              <p><LoadingIcon />Confirm</p></Button>
         </ButtonToolbar>
       </div>
     </form >

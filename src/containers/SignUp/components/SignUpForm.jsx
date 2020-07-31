@@ -81,7 +81,7 @@ class SignUpForm extends PureComponent {
         }
       ).catch((error) =>{
         console.log(error)
-        if (error = 'Error: Request failed with status code 601') {
+        if (error === 'Error: Request failed with status code 601') {
           this.setState({signupError: 'The user already exists'})
           this.onShowSignUpError();
         } else{

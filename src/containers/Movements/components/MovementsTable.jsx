@@ -7,7 +7,9 @@ import columns from './columns';
 
 const initialPage = 1;
 const itemsToShow = 10;
-
+const initialSort = (a, b) => {
+  return (a['datetime'] < b['datetime']) ? 1 : -1;
+};
 class MovementsTable extends PureComponent {
   constructor() {
     super();
@@ -16,11 +18,22 @@ class MovementsTable extends PureComponent {
       originalRows: [],
       rowsToShow: [],
       loading: true,
-      heads: heads
+      heads: heads,
+      timer: null
     };
   }
+  componentDidMount() {
+    this.getMovements()
+    let timer = setInterval(()=> this.getMovements(), process.env.POLLING_TIMER);
+    this.setState({ timer })
+  }
+  
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+    this.setState({ timer: null});
+  }
 
-  componentDidMount = async () => {
+  getMovements = async () => {
     let movements = [];
     try {
       const response = await restService.get('/api/account/transactions');
@@ -39,7 +52,8 @@ class MovementsTable extends PureComponent {
   buildRows = (movements) => {
     const rows = rowsBuilder.build(movements);
 
-    const rowsToShow = this.filterRows(rows, initialPage, itemsToShow);
+    let rowsToShow = this.filterRows(rows, initialPage, itemsToShow);
+    rowsToShow = rowsToShow.sort(initialSort).slice(0, 10);
     this.setState({
       rowsToShow,
       originalRows: rows,
@@ -55,7 +69,7 @@ class MovementsTable extends PureComponent {
 
     const { originalRows } = this.state;
 
-    const rowsToShow = this.filterRows(originalRows, pageOfItems, itemsToShow);
+    let rowsToShow = this.filterRows(originalRows, pageOfItems, itemsToShow);
     this.setState({ rowsToShow, pageOfItems });
   };
 
@@ -76,7 +90,7 @@ class MovementsTable extends PureComponent {
     };
 
     const { originalRows } = this.state;
-    const rowsToShow = sortDirection === 'NONE' ? originalRows.slice(0, 10) : originalRows.sort(comparer).slice(0, 10);
+    const rowsToShow = sortDirection === 'NONE' ? originalRows.sort(initialSort).slice(0, 10) : originalRows.sort(comparer).slice(0, 10);
     this.setState({ rowsToShow });
   };
 

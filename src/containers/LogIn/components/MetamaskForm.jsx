@@ -5,7 +5,10 @@ import validate from './validate';
 import { withTranslation } from 'react-i18next';
 import { web3Service } from '../../../services/web3Service';
 import { MetaMaskButton } from "rimble-ui";
-import Modal from '../../../shared/components/Modal';
+import { Button, Modal, ButtonToolbar } from 'reactstrap';
+const step1 = `${process.env.PUBLIC_URL}/img/step1.png`;
+const step2 = `${process.env.PUBLIC_URL}/img/step2.png`;
+const step3 = `${process.env.PUBLIC_URL}/img/step3.png`;
 
 var detect = require("detect-browser").detect;
 
@@ -101,13 +104,15 @@ class MetamaskForm extends PureComponent {
     this.setState(prevState => ({ showPassword: !prevState.showPassword }));
   };
 
-  network() {
+  checkNetwork() {
     // If a web3 instance is already provided by Meta Mask.
     if (window.ethereum.networkVersion === process.env.DLT_NETWORKS) {
       localStorage.setItem('userDltAddress', window.web3.eth.defaultAccount);
       this.setState({ isLogin: true, isDesiredNetwork: true });
+      window.location.reload();
      } 
   }
+  
   async init() {
     try {
       await window.ethereum.enable();
@@ -115,6 +120,7 @@ class MetamaskForm extends PureComponent {
         isDesiredNetwork: false,
         isLoginMetaMask: true
       });
+      this.checkNetwork();
     } catch (error) {
       this.setState({ isLoginMetaMask: false});
     }
@@ -210,18 +216,79 @@ class MetamaskForm extends PureComponent {
       color: '#9d9d9d'
     };
 
+    var divStyle = {
+      marginTop: '15px'
+    };
+
+    var divImageStyle = {
+      justifyContent: 'center',
+      marginTop: 10
+    };
+
+    var step1Style = {
+      width: '301px',
+      height: '45px',
+      display: 'block',
+      margin: 'auto',
+    };
+    var step2Style = {
+      width: '301px',
+      height: '146px',
+      display: 'block',
+      margin: 'auto',
+    };
+    var step3Style = {
+      width: '301px',
+      height: '146px',
+      display: 'block',
+      margin: 'auto',
+    };
     return (
       <div className="text-center">
         <img alt="" style={imageStyle} src={metamask}></img>
         <h4 className="text-center" style={textStyle}>Please make sure you are connected on metamask with an account in the <a class="text-link" href="">LACchain network. </a></h4>
-        <Modal
-              color="warning"
-              title="Attention!"
-              message="You have to open Metamask extension and select Pantheon network in the dropdown"
-              modal = { this.state.modal }
-              toggle = { this.close }
-              centered={ true }
-            />
+            <Modal
+              centered
+              isOpen={this.state.modal}
+              width={800}
+              toggle={this.close}
+              className={`modal-dialog--primary modal-dialog--header big-modal`}
+            >
+              <div className="modal__header">
+                <button className="lnr lnr-cross modal__close-btn" type="button" onClick={this.close} />
+                {''}
+                <h4 className="bold-text modal__title">Connect to LACChain</h4>
+              </div>
+              <div className="modal__body" style={{ marginLeft: 20 }}>
+                <h3 className="page-title" style={{ marginBottom: 0 }}></h3>
+                <span>To use the  application, you will need to connect metamask to LACChain network firs.</span><br/>
+                <span>Follow the next steps:</span>
+                <div style={ divStyle }>
+                  <span className="bold-text-gray2">1. Open your Metamask browser extension, usually found in the top right corner of your browser.</span>
+                  <div style={divImageStyle}>
+                    <img alt="" style={step1Style} src={step1}></img>
+                  </div>
+                </div>
+                <div style={ divStyle }>
+                  <span className="bold-text-gray2">2. Click on the "Networks "selector on the top, and select "Custom RPC".</span>
+                  <div style={divImageStyle}>
+                    <img alt="" style={step2Style} src={step2}></img>
+                  </div>
+                </div>
+                <div style={ divStyle }>
+                  <span className="bold-text-gray2">3. Add the network name ("LACChain") and the new RPC url: "{process.env.NODE_URL}". Click save.</span>
+                  <div style={divImageStyle}>
+                    <img alt="" style={step3Style} src={step3}></img>
+                  </div>
+                </div>
+                <div style={ divStyle }>
+                  <span className="bold-text-gray2">4. Now on the "Networks" selector at the top, make sure you have "LACChain" selected.</span>
+                </div>
+              </div>
+              <ButtonToolbar className="modal__footer footer_right">
+                <Button colored={true} color={'primary'} onClick={this.close}>Close</Button>
+              </ButtonToolbar>
+            </Modal>
         {!this.state.isLoginMetaMask &&<MetaMaskButton style={buttonStyle} mb={3} onClick={this.handleMetamask}>
           {!web3Service.isMetamaskInstalled() ? "Install MetaMask" : "Connect to Metamask"}
         </MetaMaskButton>}

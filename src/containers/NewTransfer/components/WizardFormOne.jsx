@@ -9,8 +9,9 @@ import { connect } from 'react-redux';
 import renderField from '../renderField';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import inputHelper from '../../../services/inputHelper';
-
+import XMLParser from 'react-xml-parser'
 const { updateSyncErrors, change } = require('redux-form/lib/actions').default;
+var builder = require('xmlbuilder');
 
 class WizardFormOne extends PureComponent {
 
@@ -52,21 +53,65 @@ class WizardFormOne extends PureComponent {
   sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
   };
-
+  buildXmlBody = (amount) => {
+    let body = builder.create('IFX', {'type': 'git'})
+    .ele('SignonRq')
+     .ele('ClientDt').txt('2020-06-09T06:55:42').up()
+     .ele('CustLangPref').txt('ENGLISH').up()
+     .ele('ClientApp')
+     .ele('Org').txt('IDB').up()
+     .ele('Name').txt('Blockchain POC').up()
+     .ele('Version').txt('1.0').up()
+     .up()
+     .up()
+     .ele('BankSvcRq')
+     .ele('RqUID').txt('CR3113-Main-APIm-TC080').up()
+     .ele('ForExRateInqRq')
+     .ele('RqUID').text('CR3113-Main-APIm-TC08A').up()
+     .ele('CustId')
+     .ele('SPName').txt('CTSI').up()
+     .ele('CustPermId').txt('812660001').up()
+     .up()
+     .ele('DepAcctId')
+     .ele('AcctId').text('31208277').up()
+     .ele('AcctType').text('SD').up()
+     .ele('BankInfo').up()
+     .up()
+     .ele('RemitAmt').txt(amount).up()
+     .ele('RemitCurCode').txt('USD').up()
+     .ele('IssueCurCode').txt('DOP').up()
+     .ele('ForExRateType').txt('Indicated').up()
+     .ele('ForExRateDealType').txt('BUY').up()
+     .ele('ForExValDtType').txt('Spot').up()
+     .ele('DeliveryMethod').txt('DEALID16').up()
+     .up()
+     .up()
+     .end({ pretty: true});
+     return body;
+  }
   calculateAmount = async (event) => {
-    let amount = parseInt(event.target.value.replace(/[^0-9]/g, ''), 10)
-    if (amount) {
-      if (amount > parseInt(this.state.balanceAccount, 10)) {
-        return this.props.dispatch(updateSyncErrors('wizard', {
-          'amount': 'Amount should not be greather than your current balance'
-        }));
+    try {
+      let amount = parseInt(event.target.value.replace(/[^0-9]/g, ''), 10)
+      if (amount) {
+        if (amount > parseInt(this.state.balanceAccount, 10)) {
+          return this.props.dispatch(updateSyncErrors('wizard', {
+            'amount': 'Amount should not be greather than your current balance'
+          }));
+        }
+        let body = this.buildXmlBody(amount);
+        
+        const response = await restService.proxyPost('/raterequest/', body);
+        let xml = new XMLParser().parseFromString(response.data);
+        let recipientAmount = xml.getElementsByTagName('IssueAmt')[0].value;
+
+        await this.props.dispatch(change('wizard', 'recipientAmount', recipientAmount));
+        this.props.wizard.values.rate = xml.getElementsByTagName('CurRate')[0].value;
+        this.props.wizard.values.currencyAccount = this.state.currencyAccount;
+        
+        this.setState({ recipientAmount })
       }
-      await this.props.dispatch(change('wizard', 'recipientAmount', amount * this.state.fee));
-      let recipientAmount = amount * this.state.fee;
-      this.props.wizard.values.fee = this.state.fee;
-      this.props.wizard.values.rate = this.state.rate;
-      this.props.wizard.values.currencyAccount = this.state.currencyAccount;
-      this.setState({ recipientAmount })
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -94,7 +139,7 @@ class WizardFormOne extends PureComponent {
         allowDecimal: true,
       });
     }
-      
+
     const { handleSubmit } = this.props;
     const { invalid } = this.props;
 
@@ -137,8 +182,7 @@ The rate is indicative, final rate is applied at the moment of the transaction. 
               component={renderSelectField}
               type="text"
               options={[
-                { value: 'USD', label: 'USD' },
-                { value: 'MXN', label: 'MXN' },
+                { value: 'DOP', label: 'DOP' },
               ]}
               placeholder="Select currency"
             />

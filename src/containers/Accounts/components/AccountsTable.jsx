@@ -6,7 +6,6 @@ import rowsBuilder from '../../../services/rowsBuilder';
 import columns from './columns';
 import { web3Service } from '../../../services/web3Service';
 import { asyncForEach } from '../../../services/asyncForEach';
-import inputHelper from '../../../services/inputHelper';
 
 const initialPage = 1;
 const itemsToShow = 10;
@@ -87,7 +86,7 @@ class AccountsTable extends PureComponent {
     await asyncForEach(rowsToShow, async row => {
       try {
         let accountBalance = await web3Service.emoneyBalanceOf(row.dltAddress, row.currency);
-        row.balance = inputHelper.formatNumber(accountBalance);
+        row.balance = accountBalance;
       } catch (e) {
         row.balance = 'error getting account balance';
       }

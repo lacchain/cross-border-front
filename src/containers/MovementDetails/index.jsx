@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import restService from '../../services/restService';
 import { userService } from '../../services/userService';
 import CloseCircleOutlineIcon from 'mdi-react/CloseCircleOutlineIcon';
+import { web3Service } from '../../services/web3Service';
+import classNames from 'classnames';
+import LoadingIcon from 'mdi-react/LoadingIcon';
+import { connect } from 'react-redux';
 
 class MovementDetails extends PureComponent {
   static propTypes = {
@@ -15,10 +19,15 @@ class MovementDetails extends PureComponent {
     super();
     this.state = {
       modal: false,
-      movement: {}
+      movement: {},
+      loading: false
     };
   }
-
+  componentDidUpdate = async () => {
+    if (this.props.success.message || this.props.error.message) {
+      this.props.history.push('pages/movements')
+    }
+  }
   componentDidMount = async () => {
     let movement;
 
@@ -43,8 +52,9 @@ class MovementDetails extends PureComponent {
     }
   };
 
-  approveTransfer = () => {
-    alert('approve')
+  approveTransfer = async () => {
+    this.setState({ loading: true });
+    await web3Service.approveTransfer(this.state.movement.operationId)
   }
 
   goBack = () => {
@@ -79,6 +89,13 @@ class MovementDetails extends PureComponent {
       marginTop: 20,
       textAlign: 'center'
     };
+
+    const expandClass = classNames({
+      icon: true,
+      expand: true,
+      'expand--load': this.state.loading,
+    });
+
     return (
       <Col md={12} lg={12}>
         <Row>
@@ -98,14 +115,19 @@ class MovementDetails extends PureComponent {
                 {this.state.movement.transferDetails &&
                 <form className="form form--horizontal wizard__form">
                   <h3 className="wizard__title">Cross border transfer</h3>
-                  <h4 style={subtitle} className="gray text-center">Operation ID {this.state.movement.operationId}</h4>
+                  <div style={ {width: '100%'} }>
+                    <p style={subtitle} className="gray text-center">Operation ID: {this.state.movement.operationId}</p>
+                    <p style={subtitle} className="gray text-center">End to end ID: {this.state.movement.endtoendId}</p>
+                    <p style={subtitle} className="gray text-center">Apimgu ID: {this.state.movement.apimguid}</p>
+                  </div>
                   <div style={{ width: '100%', textAlign: 'center', marginBottom: '30px' }}>
                     <div className={`badge badge-${this.state.movement.status.toLowerCase().replace(/\s/g,'')}`}>{this.state.movement.status.toLowerCase()}</div>
                   </div>
                   <div style={{ width: '100%' }}>
                     <ButtonToolbar className="form__button-toolbar wizard__toolbar" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
                       <Button type="button" className="previous" onClick={this.goBack}>Back</Button>
-                      {(userService.isCiti() && this.state.movement.status === "Requested") &&<Button color="primary" type="submit" onClick={this.approveTransfer}>Approve operation</Button>}
+                      {(userService.isCiti() && this.state.movement.status.toLowerCase() === "requested") && <Button color={'primary'} className={expandClass} onClick={this.approveTransfer}>
+                      <p><LoadingIcon />Approve transfer</p></Button>}
                     </ButtonToolbar>
                   </div>
                   <div style={{ width: '100%' }}>
@@ -120,19 +142,22 @@ class MovementDetails extends PureComponent {
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Fee aplied</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.feeApplied + ' ' + this.state.movement.transferDetails.senderCurrency}</p>
+                        {/* <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.feeApplied + ' ' + this.state.movement.transferDetails.senderCurrency}</p> */}
+                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>N/A</p>
                       </div>
-                      <div style={inlineStyle}>
+                      {/* <div style={inlineStyle}>
                         <p className="review-wizard-text">Converted amount</p>
                         <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.amountConverted + ' ' + this.state.movement.transferDetails.receiverCurrency}</p>
-                      </div>
+                      </div> */}
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Rate applied</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.rateApplied}</p>
+                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.rateApplied}
+                          {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray"> (estimated)</span>}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Recipient will get</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.totalAmount} {this.state.movement.currency}</p>
+                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.totalAmount} {this.state.movement.currency}
+                        {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray"> (estimated)</span>}</p>
                       </div>
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Sender details</p>
@@ -177,15 +202,15 @@ class MovementDetails extends PureComponent {
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Operation requested</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationRequested}</p>
+                        <a className='text-link' href={`http://blocks-lacchain.mytrust.id/${this.state.movement.transactionHistory.operationRequested}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationRequested}</a>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Set fee</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.setFee}</p>
+                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>N/A</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Operation approved</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationApproved}</p>
+                        <a className='text-link' href={`http://blocks-lacchain.mytrust.id/${this.state.movement.transactionHistory.operationApproved}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationApproved}</a>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text" style={{ marginBottom: '10px' }}>DLT address</p>
@@ -202,5 +227,14 @@ class MovementDetails extends PureComponent {
     );
   }
 }
+const mapStateToProps = state => ({
+  success: state.notification.success,
+  error: state.notification.error,
+});
 
-export default MovementDetails;
+const MovementDetailsComponent = connect(
+  mapStateToProps,
+  null
+)(MovementDetails);
+
+export default MovementDetailsComponent;
