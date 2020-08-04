@@ -66,7 +66,7 @@ class MovementDetails extends PureComponent {
       display: 'inline-flex',
       width: '100%',
       justifyContent: 'space-between',
-      paddingLeft: '20px',
+      paddingLeft: '30px',
       paddingRight: '20px',
       paddingTop: '15px'
     }
@@ -79,16 +79,6 @@ class MovementDetails extends PureComponent {
       paddingTop: '20px',
       paddingBottom: '10px'
     }
-
-    let subtitle = {
-      color: '#999999',
-      fontSize: 13,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      marginBottom: 20,
-      marginTop: 20,
-      textAlign: 'center'
-    };
 
     const expandClass = classNames({
       icon: true,
@@ -115,11 +105,6 @@ class MovementDetails extends PureComponent {
                 {this.state.movement.transferDetails &&
                 <form className="form form--horizontal wizard__form">
                   <h3 className="wizard__title">Cross border transfer</h3>
-                  <div style={ {width: '100%'} }>
-                    <p style={subtitle} className="gray text-center">Operation ID: {this.state.movement.operationId}</p>
-                    <p style={subtitle} className="gray text-center">End to end ID: {this.state.movement.endtoendId}</p>
-                    <p style={subtitle} className="gray text-center">Apimgu ID: {this.state.movement.apimguid}</p>
-                  </div>
                   <div style={{ width: '100%', textAlign: 'center', marginBottom: '30px' }}>
                     <div className={`badge badge-${this.state.movement.status.toLowerCase().replace(/\s/g,'')}`}>{this.state.movement.status.toLowerCase()}</div>
                   </div>
@@ -131,90 +116,102 @@ class MovementDetails extends PureComponent {
                     </ButtonToolbar>
                   </div>
                   <div style={{ width: '100%' }}>
-                    <div style={{ width: '500px', margin: 'auto', borderStyle: 'solid', borderColor: '#e1e1e1', height: 'fit-content' }}>
+                    <div style={{ width: '700px', margin: 'auto', borderStyle: 'solid', borderColor: '#e1e1e1', height: 'fit-content' }}>
                     <h4 className="wizard__title" style={{marginTop: '20px', marginBottom: '10px'}}>Movement details</h4>
+                    <div style={inlineStyleParent}>
+                        <p className="bold-text">Tracking information</p>
+                      </div>
+                      <div style={inlineStyle}>
+                        <p className="gray">Operation ID: {this.state.movement.operationId}</p>
+                      </div>
+                      <div style={inlineStyle}>
+                        <p className="gray">End to end ID: {this.state.movement.endtoendId}</p>
+                      </div>
+                      <div style={inlineStyle}>
+                        <p className="gray">Apimgu ID: {this.state.movement.apimguid}</p>
+                      </div>
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Transfer details</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Sent amount</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px', fontSize: '18px' }}>{this.state.movement.transferDetails.amountSent + ' ' + this.state.movement.transferDetails.senderCurrency}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.amountSent + ' ' + this.state.movement.transferDetails.senderCurrency}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Fee aplied</p>
-                        {/* <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.feeApplied + ' ' + this.state.movement.transferDetails.senderCurrency}</p> */}
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>N/A</p>
+                        {/* <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.feeApplied + ' ' + this.state.movement.transferDetails.senderCurrency}</p> */}
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>N/A</p>
                       </div>
                       {/* <div style={inlineStyle}>
                         <p className="review-wizard-text">Converted amount</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.amountConverted + ' ' + this.state.movement.transferDetails.receiverCurrency}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.amountConverted + ' ' + this.state.movement.transferDetails.receiverCurrency}</p>
                       </div> */}
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Rate applied</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.rateApplied}
-                          {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray"> (estimated)</span>}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.rateApplied}
+                          {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Recipient will get</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.totalAmount} {this.state.movement.currency}
-                        {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray"> (estimated)</span>}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.totalAmount} {this.state.movement.currency}
+                        {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
                       </div>
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Sender details</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Name</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.name}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.name}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Bank</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.bank}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.bank}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Bank account</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.bankAccount}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.bankAccount}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">DLT address</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.dltAddress}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.dltAddress}</p>
                       </div>
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Recipient details</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Name</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.recipientDetails.name}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.recipientDetails.name}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Bank</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.recipientDetails.bank}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.recipientDetails.bank}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Bank account</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.recipientDetails.bankAccount}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.recipientDetails.bankAccount}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text" style={{ marginBottom: '10px' }}>DLT address</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>{this.state.movement.recipientDetails.dltAddress}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.recipientDetails.dltAddress}</p>
                       </div>
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Movement history</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Operation requested</p>
-                        <a className='text-link' href={`http://blocks-lacchain.mytrust.id/${this.state.movement.transactionHistory.operationRequested}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationRequested}</a>
+                        <a className='text-link-big' href={`https://explorer.lacchain.net/tx/${this.state.movement.transactionHistory.operationRequested}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationRequested}</a>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Set fee</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px' }}>N/A</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>N/A</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Operation approved</p>
-                        <a className='text-link' href={`http://blocks-lacchain.mytrust.id/${this.state.movement.transactionHistory.operationApproved}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationApproved}</a>
+                        <a className='text-link-big' href={`https://explorer.lacchain.net/tx/${this.state.movement.transactionHistory.operationApproved}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationApproved}</a>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text" style={{ marginBottom: '10px' }}>DLT address</p>
-                        <p className="bold-text-gray" style={{ marginTop: '0px', marginBottom: '10px' }}>{process.env.CROSSBORDER_ADDRESS}</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px', marginBottom: '10px' }}>{process.env.CROSSBORDER_ADDRESS}</p>
                       </div>
                     </div>
                   </div>

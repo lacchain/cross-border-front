@@ -21,12 +21,13 @@ var idblabStyle = {
   height: '55px',
 };
 var citiStyle = {
-  width: '30px',
-  height: '22px',
-  marginLeft:'10px'
+  width: '55px',
+  height: '40px',
+  marginLeft:'10px',
+  marginTop: '-10px'
 };
 function isMetamaskLogged() {
-  if (!web3Service.isMetamaskInstalled()) {
+  if (!web3Service.isMetamaskLogged()) {
     return false;
   } else {
     window.ethereum.on("networkChanged", () => {

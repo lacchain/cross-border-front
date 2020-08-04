@@ -13,6 +13,7 @@ class AccountData extends PureComponent {
     const dashboardStyle = {
       width: '50%',
       maxWidth: '200px',
+      minWidth: '200px',
       textAlign: 'left'
     }
     const containerStyle = {

@@ -21,9 +21,10 @@ var idblabStyle = {
   height: '55px',
 };
 var citiStyle = {
-  width: '30px',
-  height: '22px',
-  marginLeft:'10px'
+  width: '55px',
+  height: '40px',
+  marginLeft:'10px',
+  marginTop: '-10px'
 };
 function isMetamaskLogged() {
   if (!web3Service.isMetamaskLogged()) {
@@ -58,7 +59,7 @@ const LogIn = (props) => (
         </div>
         <div className="account__head">
           <h3 className="account__title">Welcome to
-            <span className="account__logo"> LaCChain
+            <span className="account__logo"> LACChain
               <span className="account__logo-accent">CrossBorder</span>
             </span>
           </h3>

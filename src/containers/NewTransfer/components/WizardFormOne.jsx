@@ -93,11 +93,6 @@ class WizardFormOne extends PureComponent {
     try {
       let amount = parseInt(event.target.value.replace(/[^0-9]/g, ''), 10)
       if (amount) {
-        if (amount > parseInt(this.state.balanceAccount, 10)) {
-          return this.props.dispatch(updateSyncErrors('wizard', {
-            'amount': 'Amount should not be greather than your current balance'
-          }));
-        }
         let body = this.buildXmlBody(amount);
         
         const response = await restService.proxyPost('/raterequest/', body);
@@ -109,6 +104,13 @@ class WizardFormOne extends PureComponent {
         this.props.wizard.values.currencyAccount = this.state.currencyAccount;
         
         this.setState({ recipientAmount })
+        if (amount > parseInt(this.state.balanceAccount, 10)) {
+          return this.props.dispatch(updateSyncErrors('wizard', {
+            'amount': 'Amount should not be greather than your current balance'
+          }));
+        } else {
+          return this.props.dispatch(updateSyncErrors('wizard', {}));
+        }
       }
     } catch (e) {
       console.log(e);
@@ -180,11 +182,12 @@ The rate is indicative, final rate is applied at the moment of the transaction. 
             <Field
               name="currency"
               component={renderSelectField}
-              type="text"
+              // type="text"
+              defaultValue={ { value: 'DOP', label: 'DOP' } }
               options={[
                 { value: 'DOP', label: 'DOP' },
               ]}
-              placeholder="Select currency"
+              // placeholder="Select currency"
             />
           </div>
         </div>
@@ -229,5 +232,5 @@ export default reduxForm({
   form: 'wizard', //                 <------ same form name
   destroyOnUnmount: false, //        <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-  validate,
+  validate
 })(AmountForm);

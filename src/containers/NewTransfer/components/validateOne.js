@@ -1,5 +1,11 @@
+import store from '../../App/storeConfig';
+
 const validate = (values) => {
-  const errors = {};
+  let errors = {};
+  if (store.getState().form.wizard) {
+    errors = store.getState().form.wizard.syncErrors ? store.getState().form.wizard.syncErrors : {};
+  }
+  
   if (!values.amount) {
     errors.amount = 'Amount field shouldn’t be empty';
   }

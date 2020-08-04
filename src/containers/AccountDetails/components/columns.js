@@ -59,6 +59,7 @@ export default [
   {
     key: 'status',
     name: 'Status',
+    width: 120,
     sortable: true,
     formatter: (props)=> {
       let status = props.value.toLowerCase().replace(/\s/g,'');

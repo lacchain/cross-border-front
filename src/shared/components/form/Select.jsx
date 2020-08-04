@@ -7,6 +7,10 @@ class SelectField extends PureComponent {
     onChange: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
+    defaultValue: PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+    }),
     options: PropTypes.arrayOf(PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
@@ -23,6 +27,7 @@ class SelectField extends PureComponent {
   static defaultProps = {
     placeholder: '',
     options: [],
+    defaultValue: {},
   };
 
   handleChange = (selectedOption) => {
@@ -32,13 +37,14 @@ class SelectField extends PureComponent {
 
   render() {
     const {
-      value, name, placeholder, options,
+      value, name, placeholder, options, defaultValue
     } = this.props;
-
+    console.log(defaultValue);
     return (
       <Select
         name={ name }
-        value={ value }
+        value={ value ? value : defaultValue }
+        defaultValue={ defaultValue }
         onChange={ this.handleChange }
         options={ options }
         clearable={ false }
@@ -52,14 +58,16 @@ class SelectField extends PureComponent {
 
 const renderSelectField = (props) => {
   const {
-    input, meta, options, placeholder,
+    input, meta, options, placeholder, defaultValue
   } = props;
+  console.log(defaultValue);
   return (
     <div className="form__form-group-input-wrap">
       <SelectField
         { ...input }
         options={ options }
         placeholder={ placeholder }
+        defaultValue={ defaultValue }
       />
       {meta.touched && meta.error && <span className="form__form-group-error">{meta.error}</span>}
     </div>
@@ -79,6 +87,10 @@ renderSelectField.propTypes = {
     value: PropTypes.string,
     label: PropTypes.string,
   })),
+  defaultValue: PropTypes.shape({
+    value: PropTypes.string,
+    label: PropTypes.string,
+  }),
   placeholder: PropTypes.string,
 };
 
@@ -86,6 +98,7 @@ renderSelectField.defaultProps = {
   meta: null,
   options: [],
   placeholder: '',
+  defaultValue: {}
 };
 
 export default renderSelectField;

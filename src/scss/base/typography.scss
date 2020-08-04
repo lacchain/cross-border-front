@@ -116,6 +116,11 @@ h6 {
   max-width: 270px;
 }
 
+.bold-text-gray-big {
+  font-weight: 700;
+  color: #999999 !important;
+}
+
 .bold-text-gray2 {
   font-weight: 700;
   color: #575757 !important;
@@ -131,13 +136,13 @@ h6 {
   color: #9c9c9c !important;
   font-size:  '14px';
   font-weight: 500 !important;
-  text-align: right;
+  text-align: left;
   width: 120px;
 }
 
 .review-wizard-title-text {
   font-weight: 700 !important;
-  text-align: right;
+  text-align:   left;
   width: 120px;
 }
 
@@ -152,6 +157,12 @@ h6 {
 .text-link {
   color: #4a90e2 !important;
   max-width: 220px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.text-link-big {
+  color: #4a90e2 !important;
   font-weight: 700;
   cursor: pointer;
 }
