@@ -59,7 +59,7 @@ const SignUp = (props) => (
         </div>
         <div className="account__head">
           <h3 className="account__title">Welcome to
-            <span className="account__logo"> LaCChain
+            <span className="account__logo"> LACChain
               <span className="account__logo-accent">CrossBorder</span>
             </span>
           </h3>

@@ -1,80 +1,67 @@
 import React from 'react';
+import moment from 'moment';
 import inputHelper from '../../../services/inputHelper';
 import {
   Button,
 } from 'reactstrap';
-import moment from 'moment';
 
 export default [
   {
     key: 'datetime',
     name: 'Time',
     sortable: true,
-    width: 90,
-    formatter: (props)=> moment(props.value).format('DD/MM/YYYY'),
+    width: 110,
+    formatter: (props)=> moment(props.value).format('MM/DD/YYYY'),
   },
   {
-    key: 'senderBank',
-    name: 'Sender',
-    width: 90,
+    key: 'transferType',
+    name: 'Type',
     sortable: true,
   },
   {
-    key: 'senderDltAddress',
-    name: 'Sender DLT address',
-    width: 140,
+    key: 'senderName',
+    name: 'Form',
     sortable: true,
   },
   {
-    key: 'receiverBank',
-    name: 'Recipient',
-    sortable: true,
-    width: 90,
-    formatter: (props) => props.value !== '' ? props.value : 'loading...'
-  },
-  {
-    key: 'receiverDltAddress',
-    name: 'Recipient DLT address',
-    width: 150,
+    key: 'receiverName',
+    name: 'To',
     sortable: true,
   },
   {
     key: 'amountSent',
-    name: 'Sent amount',
+    name: 'Amount sent',
     sortable: true,
-    width: 90,
+    formatter: (props) => '- USD ' +  inputHelper.formatNumber(props.value, props.row.currency)
   },
   {
     key: 'amountReceived',
-    name: 'Received amount',
+    name: 'Amount received',
+    width: 130,
     sortable: true,
-    width: 120,
-    formatter: (props) => inputHelper.formatNumber(props.value, props.row.currency)
+    formatter: (props) => '+ DOP' + inputHelper.formatNumber(props.value, props.row.currency)
   },
   {
     key: 'fee',
     name: 'Fee',
     sortable: true,
-    width: 50,
-    formatter: (props) => inputHelper.formatNumber(props.value, props.row.currency)
+    width: 60,
   },
   {
     key: 'rateApplied',
     name: 'Rate applied',
     sortable: true,
-    width: 90,
-    formatter: (props) => inputHelper.formatNumber(props.value, props.row.currency)
   },
   {
     key: 'status',
     name: 'Status',
-    sortable: true,
     width: 120,
+    sortable: true,
     formatter: (props)=> {
       let status = props.value.toLowerCase().replace(/\s/g,'');
       return (
         <div>
-          <div className={ `badge badge-${status}` }>{status}</div>
+          <div className={ `badge badge-${status}` }>{status.charAt(0).toUpperCase() + status.slice(1)}</div>
         </div>
       );
     },
@@ -83,7 +70,6 @@ export default [
     key: 'actions',
     name: 'Actions',
     sortable: true,
-    width: 110,
     formatter: (props)=> {
       return (
         <Button  style={ { marginBottom: 0, padding: '3px', width: '100%' } } color="primary" size="sm">See details</Button>

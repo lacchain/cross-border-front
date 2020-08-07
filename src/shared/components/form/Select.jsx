@@ -39,7 +39,6 @@ class SelectField extends PureComponent {
     const {
       value, name, placeholder, options, defaultValue
     } = this.props;
-    console.log(defaultValue);
     return (
       <Select
         name={ name }
@@ -60,7 +59,6 @@ const renderSelectField = (props) => {
   const {
     input, meta, options, placeholder, defaultValue
   } = props;
-  console.log(defaultValue);
   return (
     <div className="form__form-group-input-wrap">
       <SelectField

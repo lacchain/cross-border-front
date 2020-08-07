@@ -37,7 +37,7 @@ class AccountActions extends PureComponent {
     let status = this.props.account.accountDetails.status
     status = status.toLowerCase()
     let balance
-    if (status !== 'requested') {
+    if (status !== 'inactive') {
       balance = await web3Service.emoneyBalanceOf(this.props.account.accountDetails.dltAddress, this.props.account.accountDetails.currency);
     } 
     if (!balance) {
@@ -80,24 +80,10 @@ class AccountActions extends PureComponent {
       decimalLimit: 2,
       allowDecimal: true,
     });
-    const dashboardStyle = {
-      width: '50%',
-      maxWidth: '200px'
-    }
+   
     const containerStyle = {
-      display: 'inline-flex',
-      width: '100%'
-    }
-    const inlineStyle = {
-      display: 'inline-flex',
       width: '100%',
-      justifyContent: 'space-between'
-    }
-    const inlineStyle2 = {
-      display: 'inline-flex',
-      width: '100%',
-      justifyContent: 'space-between',
-      marginTop: '20px'
+      marginTop: '100px'
     }
     const selectStyle = {
       marginRight: '50px',
@@ -199,40 +185,25 @@ class AccountActions extends PureComponent {
           </ButtonToolbar>
         </Modal>
         <div style={containerStyle}>
-          <div className="dashboard__health-chart" style={dashboardStyle}>
-            <ResponsiveContainer height={180}>
-              <PieChart>
-                <Pie data={this.state.data} dataKey="value" cy={85} innerRadius={80} outerRadius={90} />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="dashboard__health-chart-info">
-              <p className="dashboard__health-chart-number bold-text-blue">{this.props.account.accountDetails.currency}</p>
-              <p className="dashboard__health-chart-units bold-text-blue">ACCOUNT</p>
-            </div>
-          </div>
-          <div style={{ marginLeft: '30px' }}>
-            <div style={inlineStyle}>
-              <p className="bold-text" style={{ fontSize: '18px' }}>ACCOUNT BALANCE</p>
-              <div className={`badge badge-${this.state.status}`}>{this.state.status}</div>
-            </div>
-            <div style={inlineStyle2}>
-              <p className="bold-text" style={{ fontSize: '46px' }}>{inputHelper.formatNumber(this.state.balance)}</p>
-              <p className="bold-text" style={{ fontSize: '26px', marginTop: '15px' }}>{this.props.account.accountDetails.currency}</p>
-            </div>
+          {this.state.status == 'active' &&<div style={{ marginLeft: '30px' }}>
+              <p className="bold-text" style={{ fontSize: '22px' }}>Account balance</p>
+              <p className="bold-text" style={{ fontSize: '22px' }}>{this.props.account.accountDetails.currency} {inputHelper.formatNumber(this.state.balance)}</p>
+            </div>}
+            {(this.state.status != 'active' && !userService.isCiti()) && <p className="bold-text" style={{ fontSize: '22px' }}>Account waiting for whitelisting</p>}
+            {(this.state.status != 'active' && userService.isCiti()) && <p className="bold-text" style={{ fontSize: '22px' }}>User account waiting for whitelisting</p>}
             {userService.isCiti() ?
               <div>
-                {this.state.status === 'requested' ? <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} className={expandClass} color="primary" size="sm" onClick={this.openWhitelistModal}>
+                {this.state.status === 'inactive' ? <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} className={expandClass} color="primary" size="sm" onClick={this.openWhitelistModal}>
                   <p style={{ display: 'block' }}><LoadingIcon />WHITELIST ACCOUNT</p>
                 </Button> :
                   <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} className={expandClass} color="primary" size="sm" onClick={this.openMintModal}>
                     <p style={{ display: 'block' }}><LoadingIcon />TOKENIZE MONEY</p>
                   </Button>}
               </div> :
-              <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} color="primary" size="sm" onClick={() => this.props.history.push('/pages/new-transfer')} disabled={this.state.status === 'requested'}>
+              (this.state.balance > 0 && this.state.status =='active')  &&<Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} color="primary" size="sm" onClick={() => this.props.history.push('/pages/new-transfer')} disabled={this.state.status === 'inactive'}>
                 <p style={{ display: 'block' }}>SEND MONEY <SendIcon style={{ marginTop: '0px', marginLeft: '10px' }} /></p>
               </Button>}
           </div>
-        </div>
       </Panel>
     );
   }

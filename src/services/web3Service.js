@@ -30,7 +30,8 @@ export const web3Service = {
     mintMoney,
     isMetamaskLogged,
     orderTransfer,
-    approveTransfer
+    approveTransfer,
+    cancelAccount
 };
 
 function isMetamaskInstalled() {
@@ -98,6 +99,40 @@ async function whitelistAccount(accountAddress, currency) {
                 store.dispatch(notificationActions.setErrorNotification(
                   'Can\'t whitelist the account',
                   'An error ocurred while whitelisting the account in the DLT, please try again'
+                ));
+              })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function cancelAccount(accountAddress, currency) {
+    web3 = new Web3(window.web3.currentProvider);
+    let emoneyContract
+    if (currency === 'USD') {
+        emoneyContract = getContract(abiEmoneyTokenDollar, eDollarAddress);
+    } else {
+        emoneyContract = getContract(abiEmoneyTokenPeso, ePesosAddress);
+    }
+    try {
+        emoneyContract.methods
+            .removeWhitelisted(accountAddress.toLowerCase()) //function in contract
+            .send({
+                from: window.web3.currentProvider.selectedAddress,
+                to: eDollarAddress,
+                gasPrice: '0'
+            }).once('confirmation', function () {
+                store.dispatch(notificationActions.setSuccessNotification(
+                    'Account cancelled!',
+                    'Congratulations, the account has been successfully cancelled!'
+                  ));
+                return
+            })
+            .once('error', function (e) {
+                console.log(e);
+                store.dispatch(notificationActions.setErrorNotification(
+                  'Can\'t cancel the account',
+                  'An error ocurred while cancelling the account in the DLT, please try again'
                 ));
               })
     } catch (e) {

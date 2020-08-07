@@ -16,11 +16,11 @@
     background-color: $color-red;
   }
 
-  &.badge-draft, &.badge-creating, &.badge-maturing, &.badge-inprogress {
+  &.badge-draft, &.badge-creating, &.badge-maturing, &.badge-inprogress, &.badge-approved, &.badge-pending {
     background-color: #dddddd;
   }
 
-  &.badge-issuing, &.badge-created, &.badge-notissued, &.badge-requested {
+  &.badge-issuing, &.badge-created, &.badge-notissued, &.badge-inactive, &.badge-requested {
     background-color: $color-yellow;
   }
 

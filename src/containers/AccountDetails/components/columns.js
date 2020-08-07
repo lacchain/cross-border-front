@@ -4,8 +4,6 @@ import inputHelper from '../../../services/inputHelper';
 import {
   Button,
 } from 'reactstrap';
-import ArrowTopRightIcon from 'mdi-react/ArrowTopRightIcon';
-import ArrowBottomRightIcon from 'mdi-react/ArrowBottomRightIcon';
 
 export default [
   {
@@ -13,47 +11,43 @@ export default [
     name: 'Time',
     sortable: true,
     width: 110,
-    formatter: (props)=> moment(props.value).format('DD/MM/YYYY'),
+    formatter: (props)=> moment(props.value).format('MM/DD/YYYY'),
   },
   {
     key: 'transfer_type',
     name: 'Type',
     sortable: true,
-    formatter: (props)=> {
-      if (props.value == 'TRANSFER OUT') {
-        return (
-          <div>
-            <ArrowTopRightIcon color={'#0c658b'}/> {props.value}
-          </div>
-        );
-      } else{
-      return (
-        <div>
-        <ArrowBottomRightIcon color={'#1dca98'}/> {props.value}
-      </div>
-      );
-    }
-    }
   },
   {
-    key: 'company',
-    name: 'Form/to',
+    key: 'sender_name',
+    name: 'Form',
     sortable: true,
   },
   {
-    key: 'dlt_address',
-    name: 'DLT Address',
+    key: 'receiver_name',
+    name: 'To',
     sortable: true,
+  },
+  {
+    key: 'amount',
+    name: 'Amount sent',
+    sortable: true,
+    formatter: (props) => '- ' +  inputHelper.formatNumber(props.value, props.row.currency)
   },
   {
     key: 'amount_received',
-    name: 'Amount',
+    name: 'Amount received',
     sortable: true,
-    formatter: (props) => props.row.transfer_type == 'TRANSFER OUT' ? '- ' +  inputHelper.formatNumber(props.value, props.row.currency) : '+ ' + inputHelper.formatNumber(props.value, props.row.currency)
+    formatter: (props) => '+ ' + inputHelper.formatNumber(props.value, props.row.currency)
   },
   {
-    key: 'detail',
-    name: 'Details',
+    key: 'rate_applied',
+    name: 'Rate applied',
+    sortable: true,
+  },
+  {
+    key: 'fee_applied',
+    name: 'Fee applied',
     sortable: true,
   },
   {

@@ -156,6 +156,8 @@ class MovementDetails extends PureComponent {
                         <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.totalAmount} {this.state.movement.currency}
                         {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
                       </div>
+                      {this.state.movement.senderDetails &&
+                      <div>
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Sender details</p>
                       </div>
@@ -175,6 +177,7 @@ class MovementDetails extends PureComponent {
                         <p className="review-wizard-text">DLT address</p>
                         <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.senderDetails.dltAddress}</p>
                       </div>
+                      </div>}
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Recipient details</p>
                       </div>

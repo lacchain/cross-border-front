@@ -294,7 +294,7 @@ class MetamaskForm extends PureComponent {
         </MetaMaskButton>}
         {(!this.state.isDesiredNetwork && this.state.isLoginMetaMask) &&
         <MetaMaskButton style={buttonStyle} mb={3} onClick={this.openMetamask}>
-        Connect to LaCChain
+        Connect to LACChain
       </MetaMaskButton>}
       </div>
     );

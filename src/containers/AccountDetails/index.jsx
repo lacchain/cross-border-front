@@ -97,8 +97,8 @@ class AccountDetails extends PureComponent {
           </Col>
         </Row>
         <Row>
-          <AccountActions account={this.state.account} {...this.props} />
           <AccountData account={this.state.account} {...this.props} showModal={this.showModal} />
+          <AccountActions account={this.state.account} {...this.props} />
         </Row>
         <Row>
           <AccountMovements movements={this.state.movements} account={this.state.account} {...this.props} />
