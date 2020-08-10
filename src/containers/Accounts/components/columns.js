@@ -33,20 +33,20 @@ export default [
     sortable: true,
   },
   {
-    key: 'currency',
-    name: 'Currency',
-    sortable: true,
-  },
-  {
     key: 'balance',
     name: 'Current Balance',
     sortable: true,
-    formatter: (props) => inputHelper.formatNumber(props.value, props.row.currency)
+    formatter: (props) => {
+      return (
+        <div style={{textAlign: 'right'}}>{props.row.currency} {inputHelper.formatNumber(props.value)}</div>
+      )
+    }
   },
   {
     key: 'status',
     name: 'Status',
     sortable: true,
+    width: 120,
     formatter: (props)=> {
       let status = props.value.toLowerCase().replace(/\s/g,'');
       return (

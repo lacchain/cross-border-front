@@ -93,24 +93,20 @@ class MovementDetails extends PureComponent {
             <h3 className="page-title">Movements details</h3>
             <h3 className="page-subhead subhead">Manage all movements in the platform</h3>
           </Col>
-          <Col>
-          
-            <div className="breadcrumbs"><CloseCircleOutlineIcon size={50} onClick={this.goBack}></CloseCircleOutlineIcon></div>
-          </Col>
         </Row>
         <Card>
           <CardBody>
             <Row>
               <Col md={12}>
+              <div className="breadcrumbs"><CloseCircleOutlineIcon size={50} onClick={this.goBack}></CloseCircleOutlineIcon></div>
                 {this.state.movement.transferDetails &&
-                <form className="form form--horizontal wizard__form">
+                <form className="form form--horizontal wizard__form" style={{padding: '20px'}}>
                   <h3 className="wizard__title">Cross border transfer</h3>
                   <div style={{ width: '100%', textAlign: 'center', marginBottom: '30px' }}>
                     <div className={`badge badge-${this.state.movement.status.toLowerCase().replace(/\s/g,'')}`}>{this.state.movement.status.toLowerCase()}</div>
                   </div>
                   <div style={{ width: '100%' }}>
                     <ButtonToolbar className="form__button-toolbar wizard__toolbar" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
-                      <Button type="button" className="previous" onClick={this.goBack}>Back</Button>
                       {(userService.isCiti() && this.state.movement.status.toLowerCase() === "requested") && <Button color={'primary'} className={expandClass} onClick={this.approveTransfer}>
                       <p><LoadingIcon />Approve transfer</p></Button>}
                     </ButtonToolbar>
@@ -118,17 +114,19 @@ class MovementDetails extends PureComponent {
                   <div style={{ width: '100%' }}>
                     <div style={{ width: '700px', margin: 'auto', borderStyle: 'solid', borderColor: '#e1e1e1', height: 'fit-content' }}>
                     <h4 className="wizard__title" style={{marginTop: '20px', marginBottom: '10px'}}>Movement details</h4>
-                    <div style={inlineStyleParent}>
-                        <p className="bold-text">Tracking information</p>
-                      </div>
-                      <div style={inlineStyle}>
-                        <p className="gray">Operation ID: {this.state.movement.operationId}</p>
-                      </div>
-                      <div style={inlineStyle}>
-                        <p className="gray">End to end ID: {this.state.movement.endtoendId}</p>
-                      </div>
-                      <div style={inlineStyle}>
-                        <p className="gray">Apimgu ID: {this.state.movement.apimguid}</p>
+                      <div>
+                        <div style={inlineStyleParent}>
+                          <p className="bold-text">Tracking information</p>
+                        </div>
+                        <div style={inlineStyle}>
+                          <p className="gray">Operation ID: {this.state.movement.operationId}</p>
+                        </div>
+                        {this.state.movement.endtoendId && <div style={inlineStyle}>
+                          <p className="gray">End to end ID: {this.state.movement.endtoendId}</p>
+                        </div>}
+                        {this.state.movement.apimguid && <div style={inlineStyle}>
+                          <p className="gray">Apimgu ID: {this.state.movement.apimguid}</p>
+                        </div>}
                       </div>
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Transfer details</p>
@@ -149,12 +147,12 @@ class MovementDetails extends PureComponent {
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Rate applied</p>
                         <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.rateApplied}
-                          {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
+                          {this.state.movement.status.toLowerCase() === 'requested' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Recipient will get</p>
                         <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.totalAmount} {this.state.movement.currency}
-                        {this.state.movement.status.toLowerCase() !== 'completed' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
+                        {this.state.movement.status.toLowerCase() === 'requested' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
                       </div>
                       {this.state.movement.senderDetails &&
                       <div>
@@ -200,22 +198,23 @@ class MovementDetails extends PureComponent {
                       <div style={inlineStyleParent}>
                         <p className="review-wizard-title-text">Movement history</p>
                       </div>
-                      <div style={inlineStyle}>
+                      {this.state.movement.transactionHistory.operationRequested && <div style={inlineStyle}>
                         <p className="review-wizard-text">Operation requested</p>
-                        <a className='text-link-big' href={`https://explorer.lacchain.net/tx/${this.state.movement.transactionHistory.operationRequested}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationRequested}</a>
-                      </div>
-                      <div style={inlineStyle}>
+                        <a className='text-link-big' target="_blank" href={`https://explorer.lacchain.net/tx/${this.state.movement.transactionHistory.operationRequested}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationRequested}</a>
+                      </div>}
+                      {/* <div style={inlineStyle}>
                         <p className="review-wizard-text">Set fee</p>
                         <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>N/A</p>
-                      </div>
-                      <div style={inlineStyle}>
+                      </div> */}
+                      {this.state.movement.transactionHistory.operationApproved && <div style={inlineStyle}>
                         <p className="review-wizard-text">Operation approved</p>
-                        <a className='text-link-big' href={`https://explorer.lacchain.net/tx/${this.state.movement.transactionHistory.operationApproved}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationApproved}</a>
+                        <a className='text-link-big' target="_blank" href={`https://explorer.lacchain.net/tx/${this.state.movement.transactionHistory.operationApproved}`} style={{ marginTop: '0px' }}>{this.state.movement.transactionHistory.operationApproved}</a>
+                      </div>}
+                      {this.state.movement.transactionHistory.operationExecuted && <div style={inlineStyle}>
+                        <p className="review-wizard-text">Operation executed</p>
+                        <a className='text-link-big' target="_blank" href={`https://explorer.lacchain.net/tx/${this.state.movement.transactionHistory.operationExecuted}`}  style={{ marginTop: '0px', marginBottom: '10px' }}>{this.state.movement.transactionHistory.operationExecuted}</a>
                       </div>
-                      <div style={inlineStyle}>
-                        <p className="review-wizard-text" style={{ marginBottom: '10px' }}>DLT address</p>
-                        <p className="bold-text-gray-big" style={{ marginTop: '0px', marginBottom: '10px' }}>{process.env.CROSSBORDER_ADDRESS}</p>
-                      </div>
+                      }
                     </div>
                   </div>
                 </form >}

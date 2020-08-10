@@ -244,6 +244,15 @@ class MetamaskForm extends PureComponent {
       margin: 'auto',
     };
     return (
+      <div>
+      <div className="account__head">
+          <h3 className="account__title">Welcome to
+            <span className="account__logo"> LACChain
+              <span className="account__logo-accent">CrossBorder</span>
+            </span>
+          </h3>
+          <h4 className="account__subhead subhead text-center">Cross border payments using blockchain</h4>
+        </div>
       <div className="text-center">
         <img alt="" style={imageStyle} src={metamask}></img>
         <h4 className="text-center" style={textStyle}>Please make sure you are connected on metamask with an account in the <a class="text-link" href="">LACchain network. </a></h4>
@@ -296,6 +305,7 @@ class MetamaskForm extends PureComponent {
         <MetaMaskButton style={buttonStyle} mb={3} onClick={this.openMetamask}>
         Connect to LACChain
       </MetaMaskButton>}
+      </div>
       </div>
     );
   }

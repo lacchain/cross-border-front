@@ -75,17 +75,20 @@ function getContract(abi, address) {
 async function whitelistAccount(accountAddress, currency) {
     web3 = new Web3(window.web3.currentProvider);
     let emoneyContract
+    let contractAddress
     if (currency === 'USD') {
         emoneyContract = getContract(abiEmoneyTokenDollar, eDollarAddress);
+        contractAddress = eDollarAddress
     } else {
         emoneyContract = getContract(abiEmoneyTokenPeso, ePesosAddress);
+        contractAddress = ePesosAddress
     }
     try {
         emoneyContract.methods
             .addWhitelisted(accountAddress.toLowerCase()) //function in contract
             .send({
                 from: window.web3.currentProvider.selectedAddress,
-                to: eDollarAddress,
+                to: contractAddress,
                 gasPrice: '0'
             }).once('confirmation', function () {
                 store.dispatch(notificationActions.setSuccessNotification(
@@ -107,36 +110,72 @@ async function whitelistAccount(accountAddress, currency) {
 }
 
 async function cancelAccount(accountAddress, currency) {
+    console.log(accountAddress.toLowerCase());
     web3 = new Web3(window.web3.currentProvider);
     let emoneyContract
+    let contractAddress
     if (currency === 'USD') {
         emoneyContract = getContract(abiEmoneyTokenDollar, eDollarAddress);
+        contractAddress = eDollarAddress
     } else {
         emoneyContract = getContract(abiEmoneyTokenPeso, ePesosAddress);
+        contractAddress = ePesosAddress
     }
-    try {
-        emoneyContract.methods
-            .removeWhitelisted(accountAddress.toLowerCase()) //function in contract
-            .send({
-                from: window.web3.currentProvider.selectedAddress,
-                to: eDollarAddress,
-                gasPrice: '0'
-            }).once('confirmation', function () {
-                store.dispatch(notificationActions.setSuccessNotification(
-                    'Account cancelled!',
-                    'Congratulations, the account has been successfully cancelled!'
-                  ));
-                return
-            })
-            .once('error', function (e) {
-                console.log(e);
-                store.dispatch(notificationActions.setErrorNotification(
-                  'Can\'t cancel the account',
-                  'An error ocurred while cancelling the account in the DLT, please try again'
-                ));
-              })
-    } catch (e) {
-        console.log(e);
+    console.log(window.web3.currentProvider.selectedAddress.toLowerCase() === process.env.OPERATOR_ADDRESS.toLowerCase())
+    if (window.web3.currentProvider.selectedAddress.toLowerCase() === process.env.OPERATOR_ADDRESS.toLowerCase()) {
+        console.log('remove');
+        try {
+            emoneyContract.methods
+                .removeWhitelisted(accountAddress.toLowerCase()) //function in contract
+                .send({
+                    from: window.web3.currentProvider.selectedAddress,
+                    to: contractAddress,
+                    gasPrice: '0',
+                    gas: '80000000'
+                }).once('confirmation', function () {
+                    store.dispatch(notificationActions.setSuccessNotification(
+                        'Account cancelled!',
+                        'Congratulations, the account has been successfully cancelled!'
+                    ));
+                    return
+                })
+                .once('error', function (e) {
+                    console.log(e);
+                    store.dispatch(notificationActions.setErrorNotification(
+                    'Can\'t cancel the account',
+                    'An error ocurred while cancelling the account in the DLT, please try again'
+                    ));
+                })
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    else {
+        try {
+            emoneyContract.methods
+                .renounceWhitelisted()
+                .send({
+                    from: window.web3.currentProvider.selectedAddress,
+                    to: contractAddress,
+                    gasPrice: '0',
+                    gas: '80000000'
+                }).once('confirmation', function () {
+                    store.dispatch(notificationActions.setSuccessNotification(
+                        'Account cancelled!',
+                        'Congratulations, the account has been successfully cancelled!'
+                    ));
+                    return
+                })
+                .once('error', function (e) {
+                    console.log(e);
+                    store.dispatch(notificationActions.setErrorNotification(
+                    'Can\'t cancel the account',
+                    'An error ocurred while cancelling the account in the DLT, please try again'
+                    ));
+                })
+        } catch (e) {
+            console.log(e);
+        }
     }
 }
 

@@ -11,6 +11,7 @@ import AccountDetails from '../AccountDetails/index';
 import NewTransfer from '../NewTransfer/index';
 import Movements from '../Movements/index';
 import MovementDetails from '../MovementDetails/index';
+import ResetPassword from '../ResetPassword/index';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route { ...rest } render={ props => (
@@ -46,6 +47,7 @@ const Router = () => (
       <Switch>
         <Route exact path="/" component={ LogIn } />
         <Route exact path="/sign-up" component={ SignUp } />
+        <Route path="/reset-password/:token" component={ ResetPassword } />
         <Route path="/404" component={ NotFound404 } />
         <Route exact path="/log_in" component={ LogIn } />
         <Route path="/" component={ wrappedRoutes } />

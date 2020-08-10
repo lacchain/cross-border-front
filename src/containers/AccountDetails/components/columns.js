@@ -8,7 +8,7 @@ import {
 export default [
   {
     key: 'datetime',
-    name: 'Time',
+    name: 'Date',
     sortable: true,
     width: 110,
     formatter: (props)=> moment(props.value).format('MM/DD/YYYY'),
@@ -20,7 +20,7 @@ export default [
   },
   {
     key: 'sender_name',
-    name: 'Form',
+    name: 'From',
     sortable: true,
   },
   {

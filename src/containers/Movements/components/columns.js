@@ -8,7 +8,7 @@ import {
 export default [
   {
     key: 'datetime',
-    name: 'Time',
+    name: 'Date',
     sortable: true,
     width: 110,
     formatter: (props)=> moment(props.value).format('MM/DD/YYYY'),
@@ -20,7 +20,7 @@ export default [
   },
   {
     key: 'senderName',
-    name: 'Form',
+    name: 'From',
     sortable: true,
   },
   {
@@ -39,7 +39,7 @@ export default [
     name: 'Amount received',
     width: 130,
     sortable: true,
-    formatter: (props) => '+ DOP' + inputHelper.formatNumber(props.value, props.row.currency)
+    formatter: (props) => '+ DOP ' + inputHelper.formatNumber(props.value, props.row.currency)
   },
   {
     key: 'fee',

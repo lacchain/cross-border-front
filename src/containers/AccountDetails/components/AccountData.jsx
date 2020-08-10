@@ -35,7 +35,8 @@ class AccountData extends PureComponent {
     }
     const valueStyle = {
       marginTop: '0px',
-      marginLeft: '15px'
+      marginLeft: '15px',
+      maxWidth: '350px'
     }
     const titleStyle = {
       width: '100px',
@@ -52,7 +53,7 @@ class AccountData extends PureComponent {
       padding: '0px',
       paddingRight: '5px',
       marginTop: '10px',
-      marginBottom: '0px !important'
+      marginBottom: '0px !important',
     }
     return (
       <Panel
@@ -99,7 +100,7 @@ class AccountData extends PureComponent {
               <p style={titleStyle}>Bank Account:</p>
               <p className="bold-text-gray" style={valueStyle}>{this.props.account.bankDetails.bankAccount}</p>
             </div>            
-          <Button style={buttonStyle} color={'danger'} className={expandClass} onClick={this.cancelAccount} disabled={this.props.account.accountDetails.status.toLowerCase() == 'inactive'}>
+          <Button style={buttonStyle} color={'danger'} className={expandClass} onClick={this.cancelAccount} disabled={this.props.account.accountDetails.status.toLowerCase() != 'active'}>
               <p><LoadingIcon />Cancel account</p></Button>
           </div>
         </div>

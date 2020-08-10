@@ -193,7 +193,7 @@ class AccountActions extends PureComponent {
             {(this.state.status != 'active' && userService.isCiti()) && <p className="bold-text" style={{ fontSize: '22px' }}>User account waiting for whitelisting</p>}
             {userService.isCiti() ?
               <div>
-                {this.state.status === 'inactive' ? <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} className={expandClass} color="primary" size="sm" onClick={this.openWhitelistModal}>
+                {this.state.status !== 'active' ? <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} className={expandClass} color="primary" size="sm" onClick={this.openWhitelistModal}>
                   <p style={{ display: 'block' }}><LoadingIcon />WHITELIST ACCOUNT</p>
                 </Button> :
                   <Button style={{ marginBottom: 0, width: '100%', marginTop: '30px' }} className={expandClass} color="primary" size="sm" onClick={this.openMintModal}>

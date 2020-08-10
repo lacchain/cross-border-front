@@ -43,9 +43,7 @@ class MovementsTable extends PureComponent {
     } catch (e) {
       movements = [];
     }
-    this.setState({ movements });
-
-    this.buildRows(movements);
+    this.setState({ movements }, () => this.buildRows(movements));    
   }
 
   buildRows = (movements) => {
