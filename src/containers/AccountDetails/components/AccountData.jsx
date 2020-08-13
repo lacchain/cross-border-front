@@ -9,15 +9,41 @@ class AccountData extends PureComponent {
   constructor() {
     super();
     this.state = {
-      loading: false
+      loading: false,
+      timer: null,
+      status: ''
     };
+  }
+  componentDidMount = async () => {
+    this.getStatus()
+  };
+  getStatus = async () => {
+    let status = this.props.account.accountDetails.status
+    status = status.toLowerCase()
+    this.setState({ status })
+  }
+  componentDidUpdate = async (prevProps) => {
+    if (this.props != prevProps) {
+      this.getStatus();
+    }
   }
   cancelAccount = async () => {
     this.setState({ loading: true })
     await web3Service.cancelAccount(this.props.account.accountDetails.dltAddress, this.props.account.accountDetails.currency)
     this.setState({ loading: false })
+    let timer = setInterval(()=> this.props.getAccount(), process.env.POLLING_TIMER);
+    this.setState({ timer })
   }
-
+  componentWillReceiveProps = (prevProps) => {
+    if(this.props.account.accountDetails.status != prevProps.account.accountDetails.status) {
+      clearInterval(this.state.timer);
+      this.setState({ timer: null});  
+    }
+  }
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+    this.setState({ timer: null});
+  }
   render() {
     const expandClass = classNames({
       icon: true,
@@ -64,7 +90,7 @@ class AccountData extends PureComponent {
         panelClass={'lateral-panel-center'}
       >
         <div style={ {textAlign: 'right', marginTop: '-20px'} }>
-          <div className={`badge badge-${this.props.account.accountDetails.status.toLowerCase()}`}>{this.props.account.accountDetails.status.toLowerCase()}</div>
+          <div className={`badge badge-${this.state.status}`}>{this.state.status}</div>
         </div>
         <div style={containerStyle}>
           <div style={dashboardStyle}>
@@ -100,7 +126,7 @@ class AccountData extends PureComponent {
               <p style={titleStyle}>Bank Account:</p>
               <p className="bold-text-gray" style={valueStyle}>{this.props.account.bankDetails.bankAccount}</p>
             </div>            
-          <Button style={buttonStyle} color={'danger'} className={expandClass} onClick={this.cancelAccount} disabled={this.props.account.accountDetails.status.toLowerCase() != 'active'}>
+          <Button style={buttonStyle} color={'danger'} className={expandClass} onClick={this.cancelAccount} disabled={this.state.status != 'active'}>
               <p><LoadingIcon />Cancel account</p></Button>
           </div>
         </div>

@@ -22,8 +22,8 @@ class WizardFormOne extends PureComponent {
       issuersData: [],
       agentBanksData: [],
       currencyAccount: '',
-      fee: 1.2,
-      rate: 3
+      defaultCurrency: { value: 'DOP', label: 'DOP' },
+      rate: 0.0188
     };
   }
 
@@ -44,7 +44,6 @@ class WizardFormOne extends PureComponent {
     }
     this.setState({ currencyAccount, balanceAccount })
     if (this.props.wizard.values) {
-      this.props.wizard.values.fee = this.state.fee;
       this.props.wizard.values.rate = this.state.rate;
       this.props.wizard.values.currencyAccount = this.state.currencyAccount;
     }
@@ -93,27 +92,31 @@ class WizardFormOne extends PureComponent {
     try {
       let amount = parseInt(event.target.value.replace(/[^0-9]/g, ''), 10)
       if (amount) {
-        let body = this.buildXmlBody(amount);
-        
-        const response = await restService.proxyPost('/raterequest/', body);
-        let xml = new XMLParser().parseFromString(response.data);
-        let recipientAmount = xml.getElementsByTagName('IssueAmt')[0].value;
-
-        await this.props.dispatch(change('wizard', 'recipientAmount', recipientAmount));
-        this.props.wizard.values.rate = xml.getElementsByTagName('CurRate')[0].value;
-        this.props.wizard.values.currencyAccount = this.state.currencyAccount;
-        
-        this.setState({ recipientAmount })
         if (amount > parseInt(this.state.balanceAccount, 10)) {
           return this.props.dispatch(updateSyncErrors('wizard', {
             'amount': 'Amount should not be greather than your current balance'
           }));
         } else {
-          return this.props.dispatch(updateSyncErrors('wizard', {}));
+          this.props.dispatch(updateSyncErrors('wizard', {}));
         }
+        let body = this.buildXmlBody(amount);
+        this.props.wizard.values.currency = this.state.defaultCurrency;
+        this.props.wizard.values.currencyAccount = this.state.currencyAccount;
+        const response = await restService.proxyPost('/raterequest/', body);
+        let xml = new XMLParser().parseFromString(response.data);
+        let recipientAmount = xml.getElementsByTagName('IssueAmt')[0].value;
+        recipientAmount = inputHelper.formatNumber(recipientAmount);
+        await this.props.dispatch(change('wizard', 'recipientAmount', recipientAmount));
+        this.props.wizard.values.rate = xml.getElementsByTagName('CurRate')[0].value;
+        
+        this.setState({ recipientAmount })
       }
     } catch (e) {
       console.log(e);
+      let recipientAmount = parseInt(event.target.value.replace(/[^0-9]/g, ''), 10) / this.state.rate;
+      recipientAmount = inputHelper.formatNumber(recipientAmount);
+      await this.props.dispatch(change('wizard', 'recipientAmount', recipientAmount));
+      this.props.wizard.values.rate = this.state.rate;
     }
   };
 
@@ -183,7 +186,8 @@ The rate is indicative, final rate is applied at the moment of the transaction. 
               name="currency"
               component={renderSelectField}
               // type="text"
-              defaultValue={ { value: 'DOP', label: 'DOP' } }
+              selectedValue={ this.state.defaultCurrency }
+              defaultValue={ this.state.defaultCurrency }
               options={[
                 { value: 'DOP', label: 'DOP' },
               ]}

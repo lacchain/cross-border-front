@@ -5,9 +5,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import LoadingIcon from 'mdi-react/LoadingIcon';
+import inputHelper from '../../../services/inputHelper';
 
 const WizardFormThree = ({ handleSubmit, previousPage, wizard, submitError, changeTransferData, changeRecipientData, loading }) => {
   let transfer = wizard.values;
+  
   const inlineStyle = {
     display: 'inline-flex',
     width: '100%',
@@ -53,7 +55,7 @@ The rate applied is indicative, final rate is applied at the moment of the trans
           </div>
           <div style={inlineStyle}>
             <p className="review-wizard-text">You send:</p>
-            <p className="bold-text-gray" style={{ marginTop: '0px', fontSize: '18px' }}>{transfer.amount + ' ' + transfer.currencyAccount}</p>
+            <p className="bold-text-gray" style={{ marginTop: '0px', fontSize: '18px' }}>{inputHelper.formatNumber(transfer.amount, transfer.currencyAccount)}</p>
           </div>
           <div style={inlineStyle}>
             <p className="review-wizard-text">Fee aplied:</p>
@@ -65,11 +67,11 @@ The rate applied is indicative, final rate is applied at the moment of the trans
           </div> */}
           <div style={inlineStyle}>
             <p className="review-wizard-text">Rate applied:</p>
-            <p className="bold-text-gray" style={{ marginTop: '0px' }}>{transfer.rate}</p>
+            <p className="bold-text-gray" style={{ marginTop: '0px' }}>{inputHelper.formatNumber4Decimals(transfer.rate)}</p>
           </div>
           <div style={inlineStyle}>
             <p className="review-wizard-text">Recipient will get:</p>
-            <p className="bold-text-gray" style={{ marginTop: '0px' }}>{transfer.recipientAmount} {transfer.currency.value}</p>
+            <p className="bold-text-gray" style={{ marginTop: '0px' }}>{inputHelper.formatNumber(transfer.recipientAmount, transfer.currency.value)}</p>
           </div>
           <div style={inlineStyleParent}>
             <p className="review-wizard-title-text">Recipient details</p>

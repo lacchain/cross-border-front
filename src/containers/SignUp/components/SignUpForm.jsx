@@ -18,6 +18,7 @@ import renderField from '../renderField';
 import { web3Service } from '../../../services/web3Service';
 import renderSelectField from '../../../shared/components/form/Select';
 import { connect } from 'react-redux';
+import sjcl from 'sjcl';
 
 class SignUpForm extends PureComponent {
   static propTypes = {
@@ -42,15 +43,15 @@ class SignUpForm extends PureComponent {
       bankTaxId: '',
       bankCity: '',
       bankAccount: '',
-      signupError:'',
+      signupError: '',
       visibleSignupError: false
     };
   }
 
   componentDidMount = () => {
     localStorage.removeItem('user');
-    if(web3Service.isMetamaskInstalled) {
-      this.setState({userDltAddress: window.web3.eth.defaultAccount})
+    if (web3Service.isMetamaskInstalled) {
+      this.setState({ userDltAddress: window.web3.eth.defaultAccount })
     }
   };
 
@@ -71,23 +72,26 @@ class SignUpForm extends PureComponent {
     event.preventDefault()
     let form = this.props.signup.values
     validate(form)
+    var out = sjcl.hash.sha256.hash(form.password);
+    var hash = sjcl.codec.hex.fromBits(out)
+
     form.dltAddress = this.state.userDltAddress
     form.bankname = form.bankName ? form.bankName.label : ''
-    authService.signUp(form)
+    authService.signUp(form, hash)
       .then(
         () => {
           const { from } = this.props.location.state || { from: { pathname: '/' } };
           this.props.history.push(from);
         }
-      ).catch((error) =>{
+      ).catch((error) => {
         console.log(error)
         if (error === 'Error: Request failed with status code 601') {
-          this.setState({signupError: 'The user already exists'})
+          this.setState({ signupError: 'The user already exists' })
           this.onShowSignUpError();
-        } else{
-          this.setState({signupError: 'Something went wrong, please try again'})
+        } else {
+          this.setState({ signupError: 'Something went wrong, please try again' })
         }
-        }) 
+      })
   }
 
   render() {
@@ -106,7 +110,7 @@ class SignUpForm extends PureComponent {
     };
 
     return (
-      <form name="signup" className="form form--horizontal wizard__form" onSubmit={ this.onSignUp }>
+      <form name="signup" className="form form--horizontal wizard__form" onSubmit={this.onSignUp}>
         <div className="form__form-group">
           <span className="form__form-group-label">Account details</span>
           <div className="form__form-group-field">
@@ -213,14 +217,14 @@ class SignUpForm extends PureComponent {
             </div>
             <Field
               name="bankName"
-              component={ renderSelectField }
+              component={renderSelectField}
               value={this.state.bankName}
               type="text"
-              options={ [
+              options={[
                 { value: 'Citibank', label: 'Citibank' },
                 { value: 'MexicanBank', label: 'Mexican Bank' },
                 { value: 'PuertoRicoBank', label: 'Puerto Rico Bank' },
-              ] }
+              ]}
               placeholder="Select bank"
             />
           </div>
@@ -271,13 +275,13 @@ class SignUpForm extends PureComponent {
           </div>
         </div>
         <div className="form__form-group">
-        <Alert color={'danger'} className={'bold-text'} isOpen={this.state.visibleSignupError} style={alertStyle}>
+          <Alert color={'danger'} className={'bold-text'} isOpen={this.state.visibleSignupError} style={alertStyle}>
             <div className="alert__content">
               {this.state.signupError}
             </div>
           </Alert>
         </div>
-        <Button color="primary" type="submit"  style={buttonStyle} disabled={ invalid }>Sign Up</Button>
+        <Button color="primary" type="submit" style={buttonStyle} disabled={invalid}>Sign Up</Button>
         <div class="text-center-full">
           <span>Already have an account ? <a href="/"> Login</a></span>
         </div>

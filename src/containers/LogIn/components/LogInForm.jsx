@@ -16,6 +16,7 @@ import { web3Service } from '../../../services/web3Service';
 import renderField from '../renderField';
 import { connect } from 'react-redux';
 import { userService } from '../../../services/userService';
+import sjcl from 'sjcl';
 
 class LogInForm extends PureComponent {
   static propTypes = {
@@ -64,7 +65,11 @@ class LogInForm extends PureComponent {
   onSignIn = (event) => {
     event.preventDefault();
     let form = this.props.login.values
-    authService.getToken(form.email, form.password, window.web3.eth.defaultAccount)
+
+    var out = sjcl.hash.sha256.hash(form.password);
+    var hash = sjcl.codec.hex.fromBits(out)
+    
+    authService.getToken(form.email, hash, window.web3.eth.defaultAccount)
       .then(
         () => {
           if (userService.isCiti()) {
@@ -190,7 +195,7 @@ class LogInForm extends PureComponent {
             </div>
           </Alert>
           <div className="account__forgot-password">
-            <a href="#" onClick={this.showResetPassword}> Forgot a password?</a>
+            <a href="#" onClick={this.showResetPassword}> Forgot password?</a>
           </div>
         </div>
         <div className="form__form-group">

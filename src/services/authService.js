@@ -51,13 +51,13 @@ function getToken(username, password, dltAddress) {
     });
 }
 
-function signUp(body) {
+function signUp(body, hash) {
     return axios.post(`${process.env.BACKOFFICE_API}/api/user`, {
         accountDetails: {
             company: body.company,
             fullname: body.fullName,
             email: body.email,
-            password: body.password,
+            password: hash,
             dltAddress: body.dltAddress
         },
         bankDetails: {

@@ -29,11 +29,15 @@ class AccountActions extends PureComponent {
       mintModal: false,
       whitelistModal: false,
       whitelistCurrency: 'USD',
-      amountToMint: ''
+      amountToMint: '',
+      timer: null
     };
   }
 
   componentDidMount = async () => {
+    this.getBalance()
+  };
+  getBalance = async () => {
     let status = this.props.account.accountDetails.status
     status = status.toLowerCase()
     let balance
@@ -45,17 +49,32 @@ class AccountActions extends PureComponent {
     }
     this.setState({ status, balance })
 
-  };
-  componentDidUpdate = async () => {
+  }
+  componentDidUpdate = async (prevProps) => {
     if (this.props.success.message || this.props.error.message) {
       let balance = await web3Service.emoneyBalanceOf(this.props.account.accountDetails.dltAddress, this.props.account.accountDetails.currency);
       this.setState({ load: false, balance: balance })
     }
+    if (this.props != prevProps) {
+      this.getBalance();
+    }
+  }
+  componentWillReceiveProps = (prevProps) => {
+    if(this.props.account.accountDetails.status != prevProps.account.accountDetails.status) {
+      clearInterval(this.state.timer);
+      this.setState({ timer: null});  
+    }
+  }
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+    this.setState({ timer: null});
   }
   whitelistAccount = async () => {
     this.setState({ load: true })
     await web3Service.whitelistAccount(this.props.account.accountDetails.dltAddress, this.state.whitelistCurrency)
-    this.setState({ whitelistModal: false })
+    this.setState({ whitelistModal: false, status: 'active' })
+    let timer = setInterval(()=> this.props.getAccount(), process.env.POLLING_TIMER);
+    this.setState({ timer })
   }
   mintMoney = async () => {
     this.setState({ load: true, mintModal: false })

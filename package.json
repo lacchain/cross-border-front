@@ -71,6 +71,7 @@
     "redux-thunk": "^2.3.0",
     "resolve": "1.10.0",
     "rimble-ui": "^0.14.0",
+    "sjcl": "^1.0.8",
     "smooth-scrollbar": "^8.3.1",
     "style-loader": "0.23.1",
     "styled-components": "^5.1.0",

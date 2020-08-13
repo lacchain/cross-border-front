@@ -8,6 +8,7 @@ import { web3Service } from '../../services/web3Service';
 import classNames from 'classnames';
 import LoadingIcon from 'mdi-react/LoadingIcon';
 import { connect } from 'react-redux';
+import inputHelper from '../../services/inputHelper';
 
 class MovementDetails extends PureComponent {
   static propTypes = {
@@ -132,8 +133,8 @@ class MovementDetails extends PureComponent {
                         <p className="review-wizard-title-text">Transfer details</p>
                       </div>
                       <div style={inlineStyle}>
-                        <p className="review-wizard-text">Sent amount</p>
-                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.amountSent + ' ' + this.state.movement.transferDetails.senderCurrency}</p>
+                        <p className="review-wizard-text">Amount sent</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.senderCurrency} {this.state.movement.transferDetails.amountSent}</p>
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Fee aplied</p>
@@ -146,12 +147,12 @@ class MovementDetails extends PureComponent {
                       </div> */}
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Rate applied</p>
-                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.rateApplied}
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{inputHelper.formatNumber4Decimals(this.state.movement.transferDetails.rateApplied)}
                           {this.state.movement.status.toLowerCase() === 'requested' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
                       </div>
                       <div style={inlineStyle}>
-                        <p className="review-wizard-text">Recipient will get</p>
-                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.totalAmount} {this.state.movement.currency}
+                        <p className="review-wizard-text">Amount received</p>
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.receiverCurrency} {this.state.movement.transferDetails.totalAmount}
                         {this.state.movement.status.toLowerCase() === 'requested' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
                       </div>
                       {this.state.movement.senderDetails &&

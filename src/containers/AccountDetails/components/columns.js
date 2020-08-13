@@ -32,23 +32,38 @@ export default [
     key: 'amount',
     name: 'Amount sent',
     sortable: true,
-    formatter: (props) => '- ' +  inputHelper.formatNumber(props.value, props.row.currency)
+    formatter: (props) => {
+      return (
+        <div style={{textAlign: 'right'}}>{inputHelper.formatNumber(props.value, props.row.senderCurrency)}</div>
+      )
+    }
   },
   {
     key: 'amount_received',
     name: 'Amount received',
     sortable: true,
-    formatter: (props) => '+ ' + inputHelper.formatNumber(props.value, props.row.currency)
+    formatter: (props) => {
+      return (
+        <div style={{textAlign: 'right'}}>{inputHelper.formatNumber(props.value, props.row.receiverCurrency)}</div>
+      )
+    }
   },
   {
     key: 'rate_applied',
     name: 'Rate applied',
     sortable: true,
+    width: 90,
+    formatter: (props) => {
+      return (
+        <div>{inputHelper.formatNumber4Decimals(props.value)}</div>
+      )
+    }
   },
   {
     key: 'fee_applied',
     name: 'Fee applied',
     sortable: true,
+    width: 90,
   },
   {
     key: 'status',
@@ -57,6 +72,9 @@ export default [
     sortable: true,
     formatter: (props)=> {
       let status = props.value.toLowerCase().replace(/\s/g,'');
+      if (status == 'inprogress') {
+        status = 'approved';
+      }
       return (
         <div>
           <div className={ `badge badge-${status}` }>{status.charAt(0).toUpperCase() + status.slice(1)}</div>

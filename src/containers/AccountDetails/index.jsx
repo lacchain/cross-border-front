@@ -29,7 +29,12 @@ class AccountDetails extends PureComponent {
   }
   componentDidMount = async () => {
     this.getMovements()
-    
+    this.getAccount()
+
+    let timer = setInterval(()=> this.getMovements(), process.env.POLLING_TIMER);
+    this.setState({ timer })
+  };
+  getAccount = async () => {
     let account;
     let responseAccount;
 
@@ -56,10 +61,8 @@ class AccountDetails extends PureComponent {
     } catch (e) {
       this.setState({ account: {} });
     }
+  }
 
-    let timer = setInterval(()=> this.getMovements(), process.env.POLLING_TIMER);
-    this.setState({ timer })
-  };
   getMovements = async () => {
     const { match: { params: { accountId } } } = this.props;
 
@@ -97,8 +100,8 @@ class AccountDetails extends PureComponent {
           </Col>
         </Row>
         <Row>
-          <AccountData account={this.state.account} {...this.props} showModal={this.showModal} />
-          <AccountActions account={this.state.account} {...this.props} />
+          <AccountData getAccount={this.getAccount} account={this.state.account} {...this.props} showModal={this.showModal} />
+          <AccountActions getAccount={this.getAccount} account={this.state.account} {...this.props} />
         </Row>
         <Row>
           <AccountMovements movements={this.state.movements} account={this.state.account} {...this.props} />
