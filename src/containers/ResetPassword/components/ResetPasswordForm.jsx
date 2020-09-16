@@ -11,6 +11,7 @@ import { Alert, Modal } from 'reactstrap';
 import KeyVariantIcon from 'mdi-react/KeyVariantIcon';
 import renderField from '../renderField';
 import { connect } from 'react-redux';
+import sjcl from 'sjcl';
 
 class ResetPasswordForm extends PureComponent {
   static propTypes = {
@@ -64,7 +65,9 @@ class ResetPasswordForm extends PureComponent {
     event.preventDefault();
     let body = {};
     body.token = this.state.token;
-    body.password = this.props.resetPassword.values.newPassword;
+    var out = sjcl.hash.sha256.hash(this.props.resetPassword.values.newPassword);
+    var hash = sjcl.codec.hex.fromBits(out)
+    body.password = hash;
     const response = await authService.resetPassword(body);
     if (response.status === 200) {
       return this.props.history.push('/log_in');

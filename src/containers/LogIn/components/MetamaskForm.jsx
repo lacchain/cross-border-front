@@ -255,7 +255,7 @@ class MetamaskForm extends PureComponent {
         </div>
       <div className="text-center">
         <img alt="" style={imageStyle} src={metamask}></img>
-        <h4 className="text-center" style={textStyle}>Please make sure you are connected on metamask with an account in the <a class="text-link" href="">LACchain network. </a></h4>
+        <h4 className="text-center" style={textStyle}>Please make sure you are connected on metamask with an account in the <a class="text-link" href="">LACChain network. </a></h4>
             <Modal
               centered
               isOpen={this.state.modal}

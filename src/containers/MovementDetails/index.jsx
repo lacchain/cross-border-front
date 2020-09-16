@@ -152,7 +152,7 @@ class MovementDetails extends PureComponent {
                       </div>
                       <div style={inlineStyle}>
                         <p className="review-wizard-text">Amount received</p>
-                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.receiverCurrency} {this.state.movement.transferDetails.totalAmount}
+                        <p className="bold-text-gray-big" style={{ marginTop: '0px' }}>{this.state.movement.transferDetails.receiverCurrency} {this.state.movement.transferDetails.totalAmount}
                         {this.state.movement.status.toLowerCase() === 'requested' && <span className="bold-text-gray-big"> (estimated)</span>}</p>
                       </div>
                       {this.state.movement.senderDetails &&
